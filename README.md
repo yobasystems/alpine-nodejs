@@ -21,6 +21,10 @@ This Docker image [(yobasystems/alpine-nodejs)](https://hub.docker.com/r/yobasys
 
     docker run yobasystems/alpine-nodejs
 
+    or
+
+    docker run yobasystems/alpine-nodejs:min
+
 ## Source Repository
 
 * [Bitbucket - yobasystems/alpine-nodejs](https://bitbucket.org/yobasystems/alpine-nodejs/)
