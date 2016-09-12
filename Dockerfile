@@ -1,4 +1,4 @@
-FROM alpine:latest
+FROM alpine:3.4
 MAINTAINER Dominic Taylor <dominic@yobasystems.co.uk>
 
 ARG NODE_VER=5.12.0
