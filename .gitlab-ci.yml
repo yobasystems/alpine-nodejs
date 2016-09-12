@@ -14,6 +14,7 @@ Bitbucket Mirror:
     - echo "$BB_SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
     - chmod 600 ~/.ssh/id_rsa
     - ssh-keyscan -H 'bitbucket.org' >> ~/.ssh/known_hosts
+    - git push --mirror git@$BITBUCKET_REPO
     - git push git@$BITBUCKET_REPO HEAD:master
 
 Gitlab Container Registry build:
