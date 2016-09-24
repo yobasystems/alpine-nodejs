@@ -1,7 +1,7 @@
 FROM alpine:3.4
 MAINTAINER Dominic Taylor <dominic@yobasystems.co.uk>
 
-ARG NODE_VER=5.12.0
+ARG NODE_VER=6.6.0
 ARG NPM_VER=3
 
 RUN apk -U add curl git make gcc g++ python linux-headers paxctl libgcc libstdc++ binutils-gold ca-certificates \

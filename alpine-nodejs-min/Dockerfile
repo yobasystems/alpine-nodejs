@@ -1,4 +1,4 @@
-FROM alpine:3.4
+FROM alpine:edge
 MAINTAINER Dominic Taylor <dominic@yobasystems.co.uk>
 
 RUN apk add --no-cache nodejs
