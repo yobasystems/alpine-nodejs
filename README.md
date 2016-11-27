@@ -2,7 +2,7 @@
 
 [![Docker Layers](https://img.shields.io/badge/docker%20layers-2-blue.svg?maxAge=2592000?style=flat-square)](https://hub.docker.com/r/yobasystems/alpine-nodejs/) [![Docker Size](https://img.shields.io/badge/docker%20size-12.5%20MB-blue.svg?maxAge=2592000?style=flat-square)](https://hub.docker.com/r/yobasystems/alpine-nodejs/) [![Docker Stars](https://img.shields.io/docker/stars/yobasystems/alpine-nodejs.svg?maxAge=2592000?style=flat-square)](https://hub.docker.com/r/yobasystems/alpine-nodejs/) [![Docker Pulls](https://img.shields.io/docker/pulls/yobasystems/alpine-nodejs.svg?maxAge=2592000?style=flat-square)](https://hub.docker.com/r/yobasystems/alpine-nodejs/)
 
-[![Alpine Version](https://img.shields.io/badge/alpine%20version-v3.4-green.svg?maxAge=2592000?style=flat-square)](http://alpinelinux.org/) [![nodejs Version](https://img.shields.io/badge/nodejs%20version-v6.9.1-green.svg?maxAge=2592000?style=flat-square)](https://nodejs.org/) [![NPM Version](https://img.shields.io/badge/NPM%20version-v3-green.svg?maxAge=2592000?style=flat-square)](http://npm.org)
+[![Alpine Version](https://img.shields.io/badge/alpine%20version-v3.4-green.svg?maxAge=2592000?style=flat-square)](http://alpinelinux.org/) [![nodejs Version](https://img.shields.io/badge/nodejs%20LTS%20version-v6.9.1-green.svg?maxAge=2592000?style=flat-square)](https://nodejs.org/) [![NPM Version](https://img.shields.io/badge/NPM%20version-v3-green.svg?maxAge=2592000?style=flat-square)](http://npm.org)
 
 
 This Docker image [(yobasystems/alpine-nodejs)](https://hub.docker.com/r/yobasystems/alpine-nodejs/) is based on the minimal [Alpine Linux](http://alpinelinux.org/) with [Nodejs LTS 6.9.1](https://nodejs.org/).
