@@ -16,6 +16,17 @@ This Docker image [(yobasystems/alpine-nodejs)](https://hub.docker.com/r/yobasys
   * Memory usage is minimal on a simple install.
   * Nodejs LTS Version 6.10.0
   * NPM Version 3
+  * Armv7 (armhf) version with ```:armhf``` tag
+  * Armv7 (armhf) version min ```:armhf-min``` tag
+
+## Tags
+
+  * ```:latest``` latest nginx & alpine
+  * ```:master``` master branch usually inline with latest
+  * ```:v0.0.0``` version number related to nginx version
+  * ```:armhf``` Armv7 based on latest tag but arm architecture
+  * ```:armhf-min``` Armv7 based on latest tag but arm architecture and installed from package repo
+
 
 ## Creating an instance
 
@@ -36,3 +47,5 @@ This Docker image [(yobasystems/alpine-nodejs)](https://hub.docker.com/r/yobasys
 * [Yoba Systems](https://www.yobasystems.co.uk/)
 
 * [Dockerhub - yobasystems](https://hub.docker.com/u/yobasystems/)
+
+* [Quay.io - yobasystems](https://quay.io/organization/yobasystems)
