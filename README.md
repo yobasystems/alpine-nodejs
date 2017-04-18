@@ -2,10 +2,10 @@
 
 [![Docker Layers](https://img.shields.io/badge/docker%20layers-2-blue.svg?maxAge=2592000?style=flat-square)](https://hub.docker.com/r/yobasystems/alpine-nodejs/) [![Docker Size](https://img.shields.io/badge/docker%20size-12.5%20MB-blue.svg?maxAge=2592000?style=flat-square)](https://hub.docker.com/r/yobasystems/alpine-nodejs/) [![Docker Stars](https://img.shields.io/docker/stars/yobasystems/alpine-nodejs.svg?maxAge=2592000?style=flat-square)](https://hub.docker.com/r/yobasystems/alpine-nodejs/) [![Docker Pulls](https://img.shields.io/docker/pulls/yobasystems/alpine-nodejs.svg?maxAge=2592000?style=flat-square)](https://hub.docker.com/r/yobasystems/alpine-nodejs/)
 
-[![Alpine Version](https://img.shields.io/badge/alpine%20version-v3.5-green.svg?maxAge=2592000?style=flat-square)](http://alpinelinux.org/) [![nodejs Version](https://img.shields.io/badge/nodejs%20LTS%20version-v6.9.5-green.svg?maxAge=2592000?style=flat-square)](https://nodejs.org/) [![NPM Version](https://img.shields.io/badge/NPM%20version-v3-green.svg?maxAge=2592000?style=flat-square)](http://npm.org)
+[![Alpine Version](https://img.shields.io/badge/alpine%20version-v3.5-green.svg?maxAge=2592000?style=flat-square)](http://alpinelinux.org/) [![nodejs Version](https://img.shields.io/badge/nodejs%20LTS%20version-v6.10.2-green.svg?maxAge=2592000?style=flat-square)](https://nodejs.org/) [![NPM Version](https://img.shields.io/badge/NPM%20version-v3-green.svg?maxAge=2592000?style=flat-square)](http://npm.org)
 
 
-This Docker image [(yobasystems/alpine-nodejs)](https://hub.docker.com/r/yobasystems/alpine-nodejs/) is based on the minimal [Alpine Linux](http://alpinelinux.org/) with [Nodejs LTS 6.10.0](https://nodejs.org/).
+This Docker image [(yobasystems/alpine-nodejs)](https://hub.docker.com/r/yobasystems/alpine-nodejs/) is based on the minimal [Alpine Linux](http://alpinelinux.org/) with [Nodejs LTS 6.10.2](https://nodejs.org/).
 
 
 ## Features
@@ -14,14 +14,14 @@ This Docker image [(yobasystems/alpine-nodejs)](https://hub.docker.com/r/yobasys
     * 12.5 MB and only 2 layers
     * 11.1 MB and only 2 layers :min version (Nodejs v.6.9.2)
   * Memory usage is minimal on a simple install.
-  * Nodejs LTS Version 6.10.0
+  * Nodejs LTS Version 6.10.2
   * NPM Version 3
   * Armv7 (armhf) version with ```:armhf``` tag
   * Armv7 (armhf) version min ```:armhf-min``` tag
 
 ## Tags
 
-  * ```:latest``` latest nginx & alpine
+  * ```:latest``` latest nodejs & alpine
   * ```:master``` master branch usually inline with latest
   * ```:v0.0.0``` version number related to nginx version
   * ```:armhf``` Armv7 based on latest tag but arm architecture
