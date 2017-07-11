@@ -1,5 +1,5 @@
-FROM yobasystems/alpine:armhf
-LABEL maintainer "Dominic Taylor <dominic@yobasystems.co.uk>" architecture="ARM32v7/armhf"
+FROM yobasystems/alpine:amd64
+LABEL maintainer "Dominic Taylor <dominic@yobasystems.co.uk>" architecture="AMD64/x86_64"
 
 ARG NODE_VER=6.11.0
 ARG NPM_VER=3

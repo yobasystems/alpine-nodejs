@@ -1,8 +1,8 @@
-FROM alpine:3.5
-MAINTAINER Dominic Taylor <dominic@yobasystems.co.uk>
+FROM yobasystems/alpine:armhf
+LABEL maintainer "Dominic Taylor <dominic@yobasystems.co.uk>" architecture="ARM32v7/armhf"
 
-ARG NODE_VER=7.7.2
-ARG NPM_VER=4
+ARG NODE_VER=8.1.3
+ARG NPM_VER=5
 
 RUN apk -U add curl git make gcc g++ python linux-headers paxctl libgcc libstdc++ binutils-gold ca-certificates \
  && cd /tmp \
