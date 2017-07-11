@@ -39,22 +39,6 @@ amd64 nodejs-current build:
     - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current
     - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:amd64-current
 
-arm32v7 nodejs build:
-  stage: yobasystems/alpine-docker:armhf-dind
-  stage: build
-  tags:
-    - armhf
-  script:
-    - apk add --update git
-    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $DOCKER_REGISTRY
-    - cd alpine-nodejs-armhf/ && docker build -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:arm32v7 -t $DOCKER_REGISTRY_DOCKERHUB_REPO:arm32v7 -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:arm32v7 -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:armhf -t $DOCKER_REGISTRY_DOCKERHUB_REPO:armhf -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:armhf .
-    - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:arm32v7
-    - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:armhf
-    - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD && docker push $DOCKER_REGISTRY_DOCKERHUB_REPO:arm32v7
-    - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD && docker push $DOCKER_REGISTRY_DOCKERHUB_REPO:armhf
-    - docker login quay.io -u $QUAY_USERNAME -p $QUAY_PASSWORD && docker push $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:arm32v7
-    - docker login quay.io -u $QUAY_USERNAME -p $QUAY_PASSWORD && docker push $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:armhf
-
 arm32v7 nodejs-min build:
   stage: yobasystems/alpine-docker:armhf-dind
   stage: build
@@ -70,22 +54,6 @@ arm32v7 nodejs-min build:
     - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD && docker push $DOCKER_REGISTRY_DOCKERHUB_REPO:armhf-min
     - docker login quay.io -u $QUAY_USERNAME -p $QUAY_PASSWORD && docker push $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:arm32v7-min
     - docker login quay.io -u $QUAY_USERNAME -p $QUAY_PASSWORD && docker push $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:armhf-min
-
-arm32v7 nodejs-current build:
-  stage: yobasystems/alpine-docker:armhf-dind
-  stage: build
-  tags:
-    - armhf
-  script:
-    - apk add --update git
-    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $DOCKER_REGISTRY
-    - cd alpine-nodejs-current-armhf/ && docker build -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:armhf-current -t $DOCKER_REGISTRY_DOCKERHUB_REPO:armhf-current -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:armhf-current -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:armhf-current -t $DOCKER_REGISTRY_DOCKERHUB_REPO:armhf-current -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:armhf-current .
-    - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:armhf-current
-    - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:armhf-current
-    - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD && docker push $DOCKER_REGISTRY_DOCKERHUB_REPO:armhf-current
-    - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD && docker push $DOCKER_REGISTRY_DOCKERHUB_REPO:armhf-current
-    - docker login quay.io -u $QUAY_USERNAME -p $QUAY_PASSWORD && docker push $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:armhf-current
-    - docker login quay.io -u $QUAY_USERNAME -p $QUAY_PASSWORD && docker push $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:armhf-current
 
 Github Mirror:
   stage: deploy
