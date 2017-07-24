@@ -2,13 +2,14 @@
 
 [![Docker Layers](https://img.shields.io/badge/docker%20layers-2-blue.svg?maxAge=2592000?style=flat-square)](https://hub.docker.com/r/yobasystems/alpine-nodejs/) [![Docker Size](https://img.shields.io/badge/docker%20size-17%20MB-blue.svg?maxAge=2592000?style=flat-square)](https://hub.docker.com/r/yobasystems/alpine-nodejs/) [![Docker Stars](https://img.shields.io/docker/stars/yobasystems/alpine-nodejs.svg?maxAge=2592000?style=flat-square)](https://hub.docker.com/r/yobasystems/alpine-nodejs/) [![Docker Pulls](https://img.shields.io/docker/pulls/yobasystems/alpine-nodejs.svg?maxAge=2592000?style=flat-square)](https://hub.docker.com/r/yobasystems/alpine-nodejs/)
 
-[![Alpine Version](https://img.shields.io/badge/alpine%20version-v3.6.2-green.svg?maxAge=2592000?style=flat-square)](http://alpinelinux.org/) [![nodejs Version](https://img.shields.io/badge/nodejs%20LTS%20version-v6.11.0-green.svg?maxAge=2592000?style=flat-square)](https://nodejs.org/) [![NPM Version](https://img.shields.io/badge/NPM%20version-v3-green.svg?maxAge=2592000?style=flat-square)](http://npm.org)
+[![Alpine Version](https://img.shields.io/badge/alpine%20version-v3.6.2-green.svg?maxAge=2592000?style=flat-square)](http://alpinelinux.org/) [![nodejs Version](https://img.shields.io/badge/nodejs%20LTS%20version-v6.11.1-green.svg?maxAge=2592000?style=flat-square)](https://nodejs.org/) [![NPM Version](https://img.shields.io/badge/NPM%20version-v3.10.10-green.svg?maxAge=2592000?style=flat-square)](http://npm.org)
 
 
 This Docker image [(yobasystems/alpine-nodejs)](https://hub.docker.com/r/yobasystems/alpine-nodejs/) is based on the minimal [Alpine Linux](http://alpinelinux.org/) with [Node.js LTS](https://nodejs.org/).
 
 ##### Alpine Version 3.6.2 (Released Jun 17, 2017)
-##### Node.js Version 6.11.0
+##### Node.js Version 6.11.1
+##### NPM Version 3.10.10
 
 ----
 
@@ -24,8 +25,8 @@ Node.js is a platform built on Chrome's JavaScript runtime for easily building f
     * 17 MB and only 2 layers
     * 13 MB and only 2 layers :min version (Nodejs v.6.10.3)
   * Memory usage is minimal on a simple install.
-  * Nodejs LTS Version 6.11.0
-  * NPM Version 3
+  * Nodejs LTS Version 6.11.1
+  * NPM Version 3.10.10
 
 ## Architectures
 
