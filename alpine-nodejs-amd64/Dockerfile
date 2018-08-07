@@ -1,8 +1,8 @@
-FROM yobasystems/alpine:amd64
-LABEL maintainer "Dominic Taylor <dominic@yobasystems.co.uk>" architecture="AMD64/x86_64" version="6.11.3"
+FROM yobasystems/alpine:3.8-amd64
+LABEL maintainer "Dominic Taylor <dominic@yobasystems.co.uk>" architecture="AMD64/x86_64" version="8.11.3"
 
-ARG NODE_VER=6.11.3
-ARG NPM_VER=3
+ARG NODE_VER=8.11.3
+ARG NPM_VER=5
 
 RUN apk -U add curl git make gcc g++ python linux-headers paxctl libgcc libstdc++ binutils-gold ca-certificates \
  && cd /tmp \
