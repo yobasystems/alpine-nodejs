@@ -23,11 +23,11 @@ Node.js is a platform built on Chrome's JavaScript runtime for easily building f
 
   * Minimal size only
     * 17 MB and only 2 layers
-    * 13 MB and only 2 layers :min version (Nodejs v6.10.3)
-    * 20 MB and only 2 layers :current version (Nodejs v8.6.0)
-  * Memory usage is minimal on a simple install.
-  * Nodejs LTS Version 6.11.3
-  * NPM Version 3.10.10
+    * 13 MB and only 2 layers :min version (Nodejs v8.11.3)
+    * 20 MB and only 2 layers :current version (Nodejs v10.8.0)
+  * Memory usage is minimal on a simple install
+  * Nodejs LTS Version 8.11.3
+  * NPM Version 5.6.0
 
 ## Architectures
 
