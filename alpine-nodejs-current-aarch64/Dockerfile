@@ -1,5 +1,5 @@
 FROM yobasystems/alpine:3.8-aarch64
-LABEL maintainer "Dominic Taylor <dominic@yobasystems.co.uk>" architecture="ARM64v8/aarch64" version="10.8.0"
+LABEL maintainer "Dominic Taylor <dominic@yobasystems.co.uk>" architecture="ARM64v8/aarch64" version="10.8.0" alpineversion="3.8.1" build="28-nov-2018"
 
 ARG NODE_VER=10.8.0
 ARG NPM_VER=6
