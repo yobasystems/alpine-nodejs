@@ -2,42 +2,104 @@ stages:
   - build
   - deploy
 
-amd64 nodejs build:
-  stage: yobasystems/alpine-docker:dind
-  stage: build
-  tags:
-    - amd64
-  script:
-    - apk add --update git
-    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $DOCKER_REGISTRY
-    - cd alpine-nodejs-amd64/ && docker build -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:master -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:latest -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:amd64 .
-    - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:master
-    - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:latest
-    - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:amd64
-
 amd64 nodejs-min build:
-  stage: yobasystems/alpine-docker:dind
+  stage: yobasystems/alpine-docker:amd64-dind
   stage: build
   tags:
     - amd64
   script:
     - apk add --update git
-    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $DOCKER_REGISTRY
-    - cd alpine-nodejs-min-amd64/ && docker build -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:amd64-min .
+    - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token "$DOCKER_REGISTRY" --password-stdin
+    - cd alpine-nodejs-min-amd64/ && docker build -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min -t $DOCKER_REGISTRY_DOCKERHUB_REPO:min -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:min -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min-amd64 -t $DOCKER_REGISTRY_DOCKERHUB_REPO:min-amd64 -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:min-amd64 .
     - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min
-    - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:amd64-min
+    - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min-amd64
+    - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin && docker push $DOCKER_REGISTRY_DOCKERHUB_REPO:min
+    - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin && docker push $DOCKER_REGISTRY_DOCKERHUB_REPO:min-amd64
+    - echo "$QUAY_PASSWORD" | docker login -u "$QUAY_USERNAME" quay.io --password-stdin && docker push $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:min
+    - echo "$QUAY_PASSWORD" | docker login -u "$QUAY_USERNAME" quay.io --password-stdin && docker push $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:min-amd64
 
 amd64 nodejs-current build:
-  stage: yobasystems/alpine-docker:dind
+  stage: yobasystems/alpine-docker:amd64-dind
   stage: build
   tags:
     - amd64
   script:
     - apk add --update git
-    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $DOCKER_REGISTRY
-    - cd alpine-nodejs-current-amd64/ && docker build -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:amd64-current .
+    - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token "$DOCKER_REGISTRY" --password-stdin
+    - cd alpine-nodejs-current-amd64/ && docker build -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current -t $DOCKER_REGISTRY_DOCKERHUB_REPO:current -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:current -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current-amd64 -t $DOCKER_REGISTRY_DOCKERHUB_REPO:current-amd64 -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:current-amd64 .
     - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current
-    - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:amd64-current
+    - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current-amd64
+    - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin && docker push $DOCKER_REGISTRY_DOCKERHUB_REPO:current
+    - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin && docker push $DOCKER_REGISTRY_DOCKERHUB_REPO:current-amd64
+    - echo "$QUAY_PASSWORD" | docker login -u "$QUAY_USERNAME" quay.io --password-stdin && docker push $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:current
+    - echo "$QUAY_PASSWORD" | docker login -u "$QUAY_USERNAME" quay.io --password-stdin && docker push $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:current-amd64
+
+amd64 nodejs build:
+  stage: yobasystems/alpine-docker:amd64-dind
+  stage: build
+  tags:
+    - amd64
+  script:
+    - apk add --update git
+    - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token "$DOCKER_REGISTRY" --password-stdin
+    - cd alpine-nodejs-amd64/ && docker build -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:latest -t $DOCKER_REGISTRY_DOCKERHUB_REPO:latest -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:latest -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:amd64 -t $DOCKER_REGISTRY_DOCKERHUB_REPO:amd64 -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:amd64 -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:master -t $DOCKER_REGISTRY_DOCKERHUB_REPO:master -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:master .
+    - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:latest
+    - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:master
+    - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:amd64
+    - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin && docker push $DOCKER_REGISTRY_DOCKERHUB_REPO:latest
+    - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin && docker push $DOCKER_REGISTRY_DOCKERHUB_REPO:master
+    - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin && docker push $DOCKER_REGISTRY_DOCKERHUB_REPO:amd64
+    - echo "$QUAY_PASSWORD" | docker login -u "$QUAY_USERNAME" quay.io --password-stdin && docker push $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:latest
+    - echo "$QUAY_PASSWORD" | docker login -u "$QUAY_USERNAME" quay.io --password-stdin && docker push $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:master
+    - echo "$QUAY_PASSWORD" | docker login -u "$QUAY_USERNAME" quay.io --password-stdin && docker push $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:amd64
+
+arm64v8 nodejs-min build:
+  stage: yobasystems/alpine-docker:aarch64-dind
+  stage: build
+  tags:
+    - aarch64
+  script:
+    - apk add --update git
+    - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token "$DOCKER_REGISTRY" --password-stdin
+    - cd alpine-nodejs-min-aarch64/ && docker build -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min-arm64v8 -t $DOCKER_REGISTRY_DOCKERHUB_REPO:min-arm64v8 -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:min-arm64v8 -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min-aarch64 -t $DOCKER_REGISTRY_DOCKERHUB_REPO:min-aarch64 -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:min-aarch64 .
+    - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min-arm64v8
+    - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min-aarch64
+    - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin && docker push $DOCKER_REGISTRY_DOCKERHUB_REPO:min-arm64v8
+    - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin && docker push $DOCKER_REGISTRY_DOCKERHUB_REPO:min-aarch64
+    - echo "$QUAY_PASSWORD" | docker login -u "$QUAY_USERNAME" quay.io --password-stdin && docker push $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:min-arm64v8
+    - echo "$QUAY_PASSWORD" | docker login -u "$QUAY_USERNAME" quay.io --password-stdin && docker push $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:min-aarch64
+
+arm64v8 nodejs-current build:
+  stage: yobasystems/alpine-docker:aarch64-dind
+  stage: build
+  tags:
+    - aarch64
+  script:
+    - apk add --update git
+    - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token "$DOCKER_REGISTRY" --password-stdin
+    - cd alpine-nodejs-current-aarch64/ && docker build -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current-arm64v8 -t $DOCKER_REGISTRY_DOCKERHUB_REPO:current-arm64v8 -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:current-arm64v8 -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current-aarch64 -t $DOCKER_REGISTRY_DOCKERHUB_REPO:current-aarch64 -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:current-aarch64 .
+    - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current-arm64v8
+    - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current-aarch64
+    - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin && docker push $DOCKER_REGISTRY_DOCKERHUB_REPO:current-arm64v8
+    - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin && docker push $DOCKER_REGISTRY_DOCKERHUB_REPO:current-aarch64
+    - echo "$QUAY_PASSWORD" | docker login -u "$QUAY_USERNAME" quay.io --password-stdin && docker push $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:current-arm64v8
+    - echo "$QUAY_PASSWORD" | docker login -u "$QUAY_USERNAME" quay.io --password-stdin && docker push $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:current-aarch64
+
+arm64v8 nodejs build:
+  stage: yobasystems/alpine-docker:aarch64-dind
+  stage: build
+  tags:
+    - aarch64
+  script:
+    - apk add --update git
+    - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token "$DOCKER_REGISTRY" --password-stdin
+    - cd alpine-nodejs-aarch64/ && docker build -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:arm64v8 -t $DOCKER_REGISTRY_DOCKERHUB_REPO:arm64v8 -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:arm64v8 -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:aarch64 -t $DOCKER_REGISTRY_DOCKERHUB_REPO:aarch64 -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:aarch64 .
+    - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:arm64v8
+    - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:aarch64
+    - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin && docker push $DOCKER_REGISTRY_DOCKERHUB_REPO:arm64v8
+    - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin && docker push $DOCKER_REGISTRY_DOCKERHUB_REPO:aarch64
+    - echo "$QUAY_PASSWORD" | docker login -u "$QUAY_USERNAME" quay.io --password-stdin && docker push $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:arm64v8
+    - echo "$QUAY_PASSWORD" | docker login -u "$QUAY_USERNAME" quay.io --password-stdin && docker push $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:aarch64
 
 arm32v7 nodejs-min build:
   stage: yobasystems/alpine-docker:armhf-dind
@@ -46,14 +108,46 @@ arm32v7 nodejs-min build:
     - armhf
   script:
     - apk add --update git
-    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $DOCKER_REGISTRY
-    - cd alpine-nodejs-min-armhf/ && docker build -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:arm32v7-min -t $DOCKER_REGISTRY_DOCKERHUB_REPO:arm32v7-min -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:arm32v7-min -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:armhf-min -t $DOCKER_REGISTRY_DOCKERHUB_REPO:armhf-min -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:armhf-min .
-    - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:arm32v7-min
-    - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:armhf-min
-    - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD && docker push $DOCKER_REGISTRY_DOCKERHUB_REPO:arm32v7-min
-    - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD && docker push $DOCKER_REGISTRY_DOCKERHUB_REPO:armhf-min
-    - docker login quay.io -u $QUAY_USERNAME -p $QUAY_PASSWORD && docker push $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:arm32v7-min
-    - docker login quay.io -u $QUAY_USERNAME -p $QUAY_PASSWORD && docker push $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:armhf-min
+    - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token "$DOCKER_REGISTRY" --password-stdin
+    - cd alpine-nodejs-min-armhf/ && docker build -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min-arm32v7 -t $DOCKER_REGISTRY_DOCKERHUB_REPO:min-arm32v7 -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:min-arm32v7 -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min-armhf -t $DOCKER_REGISTRY_DOCKERHUB_REPO:min-armhf -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:min-armhf .
+    - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min-arm32v7
+    - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min-armhf
+    - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin && docker push $DOCKER_REGISTRY_DOCKERHUB_REPO:min-arm32v7
+    - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin && docker push $DOCKER_REGISTRY_DOCKERHUB_REPO:min-armhf
+    - echo "$QUAY_PASSWORD" | docker login -u "$QUAY_USERNAME" quay.io --password-stdin && docker push $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:min-arm32v7
+    - echo "$QUAY_PASSWORD" | docker login -u "$QUAY_USERNAME" quay.io --password-stdin && docker push $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:min-armhf
+
+arm32v7 nodejs-current build:
+  stage: yobasystems/alpine-docker:armhf-dind
+  stage: build
+  tags:
+    - armhf
+  script:
+    - apk add --update git
+    - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token "$DOCKER_REGISTRY" --password-stdin
+    - cd alpine-nodejs-current-armhf/ && docker build -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current-arm32v7 -t $DOCKER_REGISTRY_DOCKERHUB_REPO:current-arm32v7 -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:current-arm32v7 -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current-armhf -t $DOCKER_REGISTRY_DOCKERHUB_REPO:current-armhf -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:current-armhf .
+    - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current-arm32v7
+    - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current-armhf
+    - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin && docker push $DOCKER_REGISTRY_DOCKERHUB_REPO:current-arm32v7
+    - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin && docker push $DOCKER_REGISTRY_DOCKERHUB_REPO:current-armhf
+    - echo "$QUAY_PASSWORD" | docker login -u "$QUAY_USERNAME" quay.io --password-stdin && docker push $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:current-arm32v7
+    - echo "$QUAY_PASSWORD" | docker login -u "$QUAY_USERNAME" quay.io --password-stdin && docker push $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:current-armhf
+
+arm32v7 nodejs build:
+  stage: yobasystems/alpine-docker:armhf-dind
+  stage: build
+  tags:
+    - armhf
+  script:
+    - apk add --update git
+    - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token "$DOCKER_REGISTRY" --password-stdin
+    - cd alpine-nodejs-armhf/ && docker build -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:arm32v7 -t $DOCKER_REGISTRY_DOCKERHUB_REPO:arm32v7 -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:arm32v7 -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:armhf -t $DOCKER_REGISTRY_DOCKERHUB_REPO:armhf -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:armhf .
+    - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:arm32v7
+    - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:armhf
+    - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin && docker push $DOCKER_REGISTRY_DOCKERHUB_REPO:arm32v7
+    - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin && docker push $DOCKER_REGISTRY_DOCKERHUB_REPO:armhf
+    - echo "$QUAY_PASSWORD" | docker login -u "$QUAY_USERNAME" quay.io --password-stdin && docker push $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:arm32v7
+    - echo "$QUAY_PASSWORD" | docker login -u "$QUAY_USERNAME" quay.io --password-stdin && docker push $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:armhf
 
 Github Mirror:
   stage: deploy

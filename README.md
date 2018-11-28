@@ -2,12 +2,12 @@
 
 [![Docker Layers](https://img.shields.io/badge/docker%20layers-2-blue.svg?maxAge=2592000?style=flat-square)](https://hub.docker.com/r/yobasystems/alpine-nodejs/) [![Docker Size](https://img.shields.io/badge/docker%20size-17%20MB-blue.svg?maxAge=2592000?style=flat-square)](https://hub.docker.com/r/yobasystems/alpine-nodejs/) [![Docker Stars](https://img.shields.io/docker/stars/yobasystems/alpine-nodejs.svg?maxAge=2592000?style=flat-square)](https://hub.docker.com/r/yobasystems/alpine-nodejs/) [![Docker Pulls](https://img.shields.io/docker/pulls/yobasystems/alpine-nodejs.svg?maxAge=2592000?style=flat-square)](https://hub.docker.com/r/yobasystems/alpine-nodejs/)
 
-[![Alpine Version](https://img.shields.io/badge/alpine%20version-v3.8.0-green.svg?maxAge=2592000?style=flat-square)](http://alpinelinux.org/) [![nodejs Version](https://img.shields.io/badge/nodejs%20LTS%20version-v8.11.3-green.svg?maxAge=2592000?style=flat-square)](https://nodejs.org/) [![NPM Version](https://img.shields.io/badge/NPM%20version-v5.6.0-green.svg?maxAge=2592000?style=flat-square)](http://npm.org)
+[![Alpine Version](https://img.shields.io/badge/alpine%20version-v3.8.1-green.svg?maxAge=2592000?style=flat-square)](http://alpinelinux.org/) [![nodejs Version](https://img.shields.io/badge/nodejs%20LTS%20version-v8.11.3-green.svg?maxAge=2592000?style=flat-square)](https://nodejs.org/) [![NPM Version](https://img.shields.io/badge/NPM%20version-v5.6.0-green.svg?maxAge=2592000?style=flat-square)](http://npm.org)
 
 
 This Docker image [(yobasystems/alpine-nodejs)](https://hub.docker.com/r/yobasystems/alpine-nodejs/) is based on the minimal [Alpine Linux](http://alpinelinux.org/) with [Node.js LTS](https://nodejs.org/).
 
-##### Alpine Version 3.8.0 (Released June 26, 2018)
+##### Alpine Version 3.8.1 (Released September 11, 2018)
 ##### Node.js Version 8.11.3
 ##### NPM Version 5.6.0
 
@@ -48,6 +48,9 @@ Node.js is a platform built on Chrome's JavaScript runtime for easily building f
 * ```:armhf```, ```:arm32v7``` Armv7 based on latest tag but arm architecture
 * ```:armhf-min```, ```:arm32v7-min``` Armv7 based on latest tag but arm architecture and includes alpine package version
 * ```:armhf-current```, ```:arm32v7-current``` Armv7 based on latest tag but arm architecture and includes latest node.js
+* ```:aarch64```, ```:arm64v8``` Armv8 based on latest tag but arm64 architecture
+* ```:aarch64-min```, ```:arm64v8-min``` Armv8 based on latest tag but arm64 architecture and includes alpine package version
+* ```:aarch64-current```, ```:arm64v8-current``` Armv8 based on latest tag but arm64 architecture and includes latest node.js
 
 ## Creating an instance
 
