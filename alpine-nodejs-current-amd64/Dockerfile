@@ -1,7 +1,24 @@
-FROM yobasystems/alpine:3.8-amd64
-LABEL maintainer "Dominic Taylor <dominic@yobasystems.co.uk>" architecture="AMD64/x86_64" version="10.8.0" alpineversion="3.8.1" build="28-nov-2018"
+FROM yobasystems/alpine:3.9.2-amd64
 
-ARG NODE_VER=10.8.0
+ARG BUILD_DATE
+ARG VCS_REF
+
+LABEL maintainer="Dominic Taylor <dominic@yobasystems.co.uk>" \
+    architecture="amd64/x86_64" \
+    nodejs-version="current" \
+    alpine-version="3.9.2" \
+    build="24-Mar-2019" \
+    org.opencontainers.image.title="alpine-nodejs" \
+    org.opencontainers.image.description="Nodejs Docker image running on Alpine Linux" \
+    org.opencontainers.image.authors="Dominic Taylor <dominic@yobasystems.co.uk>" \
+    org.opencontainers.image.vendor="Yoba Systems" \
+    org.opencontainers.image.version="current" \
+    org.opencontainers.image.url="https://hub.docker.com/r/yobasystems/alpine-nodejs/" \
+    org.opencontainers.image.source="https://github.com/yobasystems/alpine-nodejs" \
+    org.opencontainers.image.revision=$VCS_REF \
+    org.opencontainers.image.created=$BUILD_DATE
+
+ARG NODE_VER=11.12.0
 ARG NPM_VER=6
 
 RUN apk -U add curl git make gcc g++ python linux-headers paxctl libgcc libstdc++ binutils-gold ca-certificates \

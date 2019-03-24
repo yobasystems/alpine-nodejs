@@ -1,15 +1,19 @@
 # nodejs Docker image running on Alpine Linux
 
-[![Docker Layers](https://img.shields.io/badge/docker%20layers-2-blue.svg?maxAge=2592000?style=flat-square)](https://hub.docker.com/r/yobasystems/alpine-nodejs/) [![Docker Size](https://img.shields.io/badge/docker%20size-17%20MB-blue.svg?maxAge=2592000?style=flat-square)](https://hub.docker.com/r/yobasystems/alpine-nodejs/) [![Docker Stars](https://img.shields.io/docker/stars/yobasystems/alpine-nodejs.svg?maxAge=2592000?style=flat-square)](https://hub.docker.com/r/yobasystems/alpine-nodejs/) [![Docker Pulls](https://img.shields.io/docker/pulls/yobasystems/alpine-nodejs.svg?maxAge=2592000?style=flat-square)](https://hub.docker.com/r/yobasystems/alpine-nodejs/)
+[![Docker Automated build](https://img.shields.io/docker/automated/yobasystems/alpine-nodejs.svg?style=for-the-badge&logo=docker)](https://hub.docker.com/r/yobasystems/alpine-nodejs/)
+[![Docker Pulls](https://img.shields.io/docker/pulls/yobasystems/alpine-nodejs.svg?style=for-the-badge&logo=docker)](https://hub.docker.com/r/yobasystems/alpine-nodejs/)
+[![Docker Stars](https://img.shields.io/docker/stars/yobasystems/alpine-nodejs.svg?style=for-the-badge&logo=docker)](https://hub.docker.com/r/yobasystems/alpine-nodejs/)
 
-[![Alpine Version](https://img.shields.io/badge/alpine%20version-v3.8.1-green.svg?maxAge=2592000?style=flat-square)](http://alpinelinux.org/) [![nodejs Version](https://img.shields.io/badge/nodejs%20LTS%20version-v8.11.3-green.svg?maxAge=2592000?style=flat-square)](https://nodejs.org/) [![NPM Version](https://img.shields.io/badge/NPM%20version-v5.6.0-green.svg?maxAge=2592000?style=flat-square)](http://npm.org)
+[![Alpine Version](https://img.shields.io/badge/Alpine%20version-v3.9.2-green.svg?style=for-the-badge)](https://alpinelinux.org/)
+[![nodejs Version](https://img.shields.io/badge/nodejs%20LTS%20version-v10.15.3-green.svg?style=for-the-badge)](https://nodejs.org/)
+[![NPM Version](https://img.shields.io/badge/NPM%20version-v6.4.1-green.svg?style=for-the-badge)](https://npm.org)
 
 
-This Docker image [(yobasystems/alpine-nodejs)](https://hub.docker.com/r/yobasystems/alpine-nodejs/) is based on the minimal [Alpine Linux](http://alpinelinux.org/) with [Node.js LTS](https://nodejs.org/).
+This Docker image [(yobasystems/alpine-nodejs)](https://hub.docker.com/r/yobasystems/alpine-nodejs/) is based on the minimal [Alpine Linux](https://alpinelinux.org/) with [Node.js LTS](https://nodejs.org/).
 
-##### Alpine Version 3.8.1 (Released September 11, 2018)
-##### Node.js Version 8.11.3
-##### NPM Version 5.6.0
+##### Alpine Version 3.9.2 (Released March 04, 2019)
+##### Node.js Version 10.15.3
+##### NPM Version 6.4.1
 
 ----
 
@@ -21,36 +25,46 @@ Node.js is a platform built on Chrome's JavaScript runtime for easily building f
 
 ## Features
 
-  * Minimal size only
-    * 17 MB and only 2 layers
-    * 13 MB and only 2 layers :min version (Nodejs v8.11.3)
-    * 20 MB and only 2 layers :current version (Nodejs v10.8.0)
-  * Memory usage is minimal on a simple install
-  * Nodejs LTS Version 8.11.3
-  * NPM Version 5.6.0
+* Minimal size only
+* Memory usage is minimal on a simple install
 
 ## Architectures
 
-* ```:amd64```, ```:latest``` - 64 bit Intel/AMD (x86_64/amd64)
-* ```:i386```, ```:x86``` - 32 bit Intel/AMD (x86/i686)
+* ```:amd64```, ```:x86_64``` - 64 bit Intel/AMD (x86_64/amd64)
 * ```:arm64v8```, ```:aarch64``` - 64 bit ARM (ARMv8/aarch64)
 * ```:arm32v7```, ```:armhf``` - 32 bit ARM (ARMv7/armhf)
 
-#### PLEASE CHECK TAGS BELOW FOR SUPPORTED ARCHITECTURES, THE ABOVE IS A LIST OF EXPLANATION
+##### PLEASE CHECK TAGS BELOW FOR SUPPORTED ARCHITECTURES, THE ABOVE IS A LIST OF EXPLANATION
 
 ## Tags
 
-* ```:latest```, ```:amd64``` latest branch based on amd64 (LTS Version of nodejs)
-* ```:master``` master branch usually inline with latest
-* ```:min``` latest branch with alpine package version
-* ```:current``` latest branch with latest version of nodejs
-* ```:v0.0.0``` version number related to docker version
-* ```:armhf```, ```:arm32v7``` Armv7 based on latest tag but arm architecture
-* ```:armhf-min```, ```:arm32v7-min``` Armv7 based on latest tag but arm architecture and includes alpine package version
-* ```:armhf-current```, ```:arm32v7-current``` Armv7 based on latest tag but arm architecture and includes latest node.js
-* ```:aarch64```, ```:arm64v8``` Armv8 based on latest tag but arm64 architecture
-* ```:aarch64-min```, ```:arm64v8-min``` Armv8 based on latest tag but arm64 architecture and includes alpine package version
-* ```:aarch64-current```, ```:arm64v8-current``` Armv8 based on latest tag but arm64 architecture and includes latest node.js
+* ```:latest``` latest branch based on lts nodejs (Automatic Architecture Selection)
+* ```:min``` package branch with alpine package version installed from alpine repos (Automatic Architecture Selection)
+* ```:current``` current branch with latest bleeding edge current version of nodejs (Automatic Architecture Selection)
+* ```:v0.0.0``` version number related to node.js version (Automatic Architecture Selection)
+* ```:amd64```, ```:x86_64```  amd64 based on latest tag but amd64 architecture
+* ```:min-amd64```, ```:min-x86_64```  amd64 based on latest tag but amd64 architecture and includes alpine package version
+* ```:current-amd64```, ```:current-x86_64```  amd64 based on latest tag but amd64 architecture and includes current node.js
+* ```:armhf```, ```:arm32v7``` Armv7 based on latest tag but arm32 architecture latest branch based on lts node.js
+* ```:min-armhf```, ```:min-arm32v7``` Armv7 based on latest tag but arm architecture and includes alpine package version
+* ```:current-armhf```, ```:current-arm32v7``` Armv7 based on latest tag but arm architecture and includes current node.js
+* ```:aarch64```, ```:arm64v8``` Armv8 based on latest tag but arm64 architecture latest branch based on lts node.js
+* ```:min-aarch64-min```, ```:min-arm64v8``` Armv8 based on latest tag but arm64 architecture and includes alpine package version
+* ```:current-aarch64```, ```:current-arm64v8``` Armv8 based on latest tag but arm64 architecture and includes current node.js
+
+## Layers & Sizes
+
+![Version](https://img.shields.io/badge/version-amd64-blue.svg?style=for-the-badge)
+![MicroBadger Layers (tag)](https://img.shields.io/microbadger/layers/yobasystems/alpine-nodejs/amd64.svg?style=for-the-badge)
+![MicroBadger Size (tag)](https://img.shields.io/microbadger/image-size/yobasystems/alpine-nodejs/amd64.svg?style=for-the-badge)
+
+![Version](https://img.shields.io/badge/version-aarch64-blue.svg?style=for-the-badge)
+![MicroBadger Layers (tag)](https://img.shields.io/microbadger/layers/yobasystems/alpine-nodejs/aarch64.svg?style=for-the-badge)
+![MicroBadger Size (tag)](https://img.shields.io/microbadger/image-size/yobasystems/alpine-nodejs/aarch64.svg?style=for-the-badge)
+
+![Version](https://img.shields.io/badge/version-armhf-blue.svg?style=for-the-badge)
+![MicroBadger Layers (tag)](https://img.shields.io/microbadger/layers/yobasystems/alpine-nodejs/armhf.svg?style=for-the-badge)
+![MicroBadger Size (tag)](https://img.shields.io/microbadger/image-size/yobasystems/alpine-nodejs/armhf.svg?style=for-the-badge)
 
 ## Creating an instance
 
@@ -59,6 +73,10 @@ Node.js is a platform built on Chrome's JavaScript runtime for easily building f
 or
 
 ```docker run yobasystems/alpine-nodejs:min```
+
+or
+
+```docker run yobasystems/alpine-nodejs:current```
 
 
 ## Source Repository
