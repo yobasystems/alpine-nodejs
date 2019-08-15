@@ -26,7 +26,7 @@ RUN apk -U add curl git make gcc g++ python linux-headers paxctl libgcc libstdc+
  && curl --silent --ssl https://nodejs.org/dist/v$NODE_VER/node-v$NODE_VER.tar.gz | tar zxf - \
  && cd node-v$NODE_VER \
  && ./configure --prefix=/usr \
- && make -j1 && make install \
+ && make -j4 && make install \
  && paxctl -cm /usr/bin/node \
  && npm install -g npm@$NPM_VER \
  && find /usr/lib/node_modules/npm -name test -o -name .bin -type d \
