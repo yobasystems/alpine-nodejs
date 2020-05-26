@@ -1,24 +1,24 @@
-FROM yobasystems/alpine:3.10.1-armhf
+FROM yobasystems/alpine:3.11.6-armhf
 
 ARG BUILD_DATE
 ARG VCS_REF
 
 LABEL maintainer="Dominic Taylor <dominic@yobasystems.co.uk>" \
     architecture="arm32v7/armhf" \
-    nodejs-version="10.16.2" \
-    alpine-version="3.10.1" \
-    build="15-Aug-2019" \
+    nodejs-version="12.17.0" \
+    alpine-version="3.11.6" \
+    build="26-May-2020" \
     org.opencontainers.image.title="alpine-nodejs" \
     org.opencontainers.image.description="Nodejs Docker image running on Alpine Linux" \
     org.opencontainers.image.authors="Dominic Taylor <dominic@yobasystems.co.uk>" \
     org.opencontainers.image.vendor="Yoba Systems" \
-    org.opencontainers.image.version="v10.16.2" \
+    org.opencontainers.image.version="v12.17.0" \
     org.opencontainers.image.url="https://hub.docker.com/r/yobasystems/alpine-nodejs/" \
     org.opencontainers.image.source="https://github.com/yobasystems/alpine-nodejs" \
     org.opencontainers.image.revision=$VCS_REF \
     org.opencontainers.image.created=$BUILD_DATE
 
-ARG NODE_VER=10.16.2
+ARG NODE_VER=12.17.0
 ARG NPM_VER=6
 
 RUN apk -U add curl git make gcc g++ python linux-headers paxctl libgcc libstdc++ binutils-gold ca-certificates \
