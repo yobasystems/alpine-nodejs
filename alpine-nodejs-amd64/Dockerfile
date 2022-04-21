@@ -21,7 +21,7 @@ LABEL maintainer="Dominic Taylor <dominic@yobasystems.co.uk>" \
 ARG NODE_VER=16.14.2
 ARG NPM_VER=8
 
-RUN apk -U add curl git make gcc g++ python linux-headers paxctl libgcc libstdc++ binutils-gold ca-certificates \
+RUN apk -U add curl git make gcc g++ python3 linux-headers paxctl libgcc libstdc++ binutils-gold ca-certificates \
  && cd /tmp \
  && curl --silent --ssl https://nodejs.org/dist/v$NODE_VER/node-v$NODE_VER.tar.gz | tar zxf - \
  && cd node-v$NODE_VER \
