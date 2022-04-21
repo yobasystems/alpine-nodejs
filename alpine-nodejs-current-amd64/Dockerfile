@@ -19,7 +19,7 @@ LABEL maintainer="Dominic Taylor <dominic@yobasystems.co.uk>" \
     org.opencontainers.image.created=$BUILD_DATE
 
 ARG NODE_VER=18.0.0
-ARG NPM_VER=6
+ARG NPM_VER=8
 
 RUN apk -U add curl git make gcc g++ python linux-headers paxctl libgcc libstdc++ binutils-gold ca-certificates \
  && cd /tmp \
