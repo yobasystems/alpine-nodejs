@@ -1,4 +1,4 @@
-FROM yobasystems/alpine:3.11.6-amd64
+FROM yobasystems/alpine:3.15.4-amd64
 
 ARG BUILD_DATE
 ARG VCS_REF
@@ -6,8 +6,8 @@ ARG VCS_REF
 LABEL maintainer="Dominic Taylor <dominic@yobasystems.co.uk>" \
     architecture="amd64/x86_64" \
     nodejs-version="min" \
-    alpine-version="3.11.6" \
-    build="26-May-2020" \
+    alpine-version="3.15.4" \
+    build="21-Apr-2022" \
     org.opencontainers.image.title="alpine-nodejs" \
     org.opencontainers.image.description="Nodejs Docker image running on Alpine Linux" \
     org.opencontainers.image.authors="Dominic Taylor <dominic@yobasystems.co.uk>" \
