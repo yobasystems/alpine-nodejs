@@ -1,25 +1,25 @@
-FROM yobasystems/alpine:3.15.4-aarch64
+FROM yobasystems/alpine:3.18.3-aarch64
 
 ARG BUILD_DATE
 ARG VCS_REF
 
 LABEL maintainer="Dominic Taylor <dominic@yobasystems.co.uk>" \
     architecture="arm64v8/aarch64" \
-    nodejs-version="16.14.2" \
-    alpine-version="3.15.4" \
-    build="21-Apr-2022" \
+    nodejs-version="18.18.0" \
+    alpine-version="3.18.3" \
+    build="01-Oct-2023" \
     org.opencontainers.image.title="alpine-nodejs" \
-    org.opencontainers.image.description="Nodejs Docker image running on Alpine Linux" \
+    org.opencontainers.image.description="Nodejs container image running on Alpine Linux" \
     org.opencontainers.image.authors="Dominic Taylor <dominic@yobasystems.co.uk>" \
     org.opencontainers.image.vendor="Yoba Systems" \
-    org.opencontainers.image.version="v16.14.2" \
+    org.opencontainers.image.version="v18.18.0" \
     org.opencontainers.image.url="https://hub.docker.com/r/yobasystems/alpine-nodejs/" \
     org.opencontainers.image.source="https://github.com/yobasystems/alpine-nodejs" \
     org.opencontainers.image.revision=$VCS_REF \
     org.opencontainers.image.created=$BUILD_DATE
 
-ARG NODE_VER=16.14.2
-ARG NPM_VER=8
+ARG NODE_VER=18.18.0
+ARG NPM_VER=9
 
 RUN apk -U add curl git make gcc g++ python3 linux-headers paxctl libgcc libstdc++ binutils-gold ca-certificates \
  && cd /tmp \

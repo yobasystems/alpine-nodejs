@@ -1,57 +1,57 @@
-# nodejs Docker image running on Alpine Linux
+# nodejs container image running on Alpine Linux
 
 [![Docker Automated build](https://img.shields.io/docker/automated/yobasystems/alpine-nodejs.svg?style=for-the-badge&logo=docker)](https://hub.docker.com/r/yobasystems/alpine-nodejs/)
 [![Docker Pulls](https://img.shields.io/docker/pulls/yobasystems/alpine-nodejs.svg?style=for-the-badge&logo=docker)](https://hub.docker.com/r/yobasystems/alpine-nodejs/)
 [![Docker Stars](https://img.shields.io/docker/stars/yobasystems/alpine-nodejs.svg?style=for-the-badge&logo=docker)](https://hub.docker.com/r/yobasystems/alpine-nodejs/)
 
-[![Alpine Version](https://img.shields.io/badge/Alpine%20version-v3.15.4-green.svg?style=for-the-badge)](https://alpinelinux.org/)
-[![nodejs Version](https://img.shields.io/badge/nodejs%20LTS%20version-v16.14.2-green.svg?style=for-the-badge)](https://nodejs.org/)
-[![NPM Version](https://img.shields.io/badge/NPM%20version-v6.9.0-green.svg?style=for-the-badge)](https://npm.org)
+[![Alpine Version](https://img.shields.io/badge/Alpine%20version-v3.18.3-green.svg?style=for-the-badge)](https://alpinelinux.org/)
+[![nodejs Version](https://img.shields.io/badge/nodejs%20LTS%20version-v18.18.0-green.svg?style=for-the-badge)](https://nodejs.org/)
+[![NPM Version](https://img.shields.io/badge/NPM%20version-v9.8.1-green.svg?style=for-the-badge)](https://npm.org)
 
 
-This Docker image [(yobasystems/alpine-nodejs)](https://hub.docker.com/r/yobasystems/alpine-nodejs/) is based on the minimal [Alpine Linux](https://alpinelinux.org/) with [Node.js LTS](https://nodejs.org/).
+This container image [(yobasystems/alpine-nodejs)](https://hub.docker.com/r/yobasystems/alpine-nodejs/) is based on the minimal [Alpine Linux](https://alpinelinux.org/) with [Node.js LTS](https://nodejs.org/).
 
-### Alpine Version 3.15.4 (Released 2022-04-04)
+### Alpine Version 3.18.3 (Released 2023-08-07)
 
 ##### LTS
-###### Node.js Version 16.14.2
-###### NPM Version 8.5.0
+###### Node.js Version 18.18.0
+###### NPM Version 9.8.1
 
 ##### CURRENT
-###### Node.js Version 18.0.0
-###### NPM Version 8.6.0
+###### Node.js Version 20.8.0
+###### NPM Version 10.1.0
 
 ##### MIN
-###### Node.js Version 16.14.2
-###### NPM Version 8.1.3
+###### Node.js Version 18.17.1
+###### NPM Version 9.6.6
 
 ----
 
-## What is Alpine Linux?
-Alpine Linux is a Linux distribution built around musl libc and BusyBox. The image is only 5 MB in size and has access to a package repository that is much more complete than other BusyBox based images. This makes Alpine Linux a great image base for utilities and even production applications. Read more about Alpine Linux here and you can see how their mantra fits in right at home with Docker images.
+## 🏔️ What is Alpine Linux?
+Alpine Linux is a Linux distribution built around musl libc and BusyBox. The image is only 5 MB in size and has access to a package repository that is much more complete than other BusyBox based images. This makes Alpine Linux a great image base for utilities and even production applications. Read more about Alpine Linux here and you can see how their mantra fits in right at home with container images.
 
 ## What is Node.js?
 Node.js is a platform built on Chrome's JavaScript runtime for easily building fast and scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
 
-## Features
+## ✨ Features
 
-* Minimal size only
-* Memory usage is minimal on a simple install
+* Minimal size only, minimal layers
+* Memory usage is minimal on a simple install.
 
-## Architectures
+## 🏗️ Architectures
 
 * ```:amd64```, ```:x86_64``` - 64 bit Intel/AMD (x86_64/amd64)
 * ```:arm64v8```, ```:aarch64``` - 64 bit ARM (ARMv8/aarch64)
 * ```:arm32v7```, ```:armhf``` - 32 bit ARM (ARMv7/armhf)
 
-##### PLEASE CHECK TAGS BELOW FOR SUPPORTED ARCHITECTURES, THE ABOVE IS A LIST OF EXPLANATION
+#### 📝 PLEASE CHECK TAGS BELOW FOR SUPPORTED ARCHITECTURES, THE ABOVE IS A LIST OF EXPLANATION
 
-## Tags
+## 🏷️ Tags
 
 * ```:latest``` latest branch based on lts nodejs (Automatic Architecture Selection)
 * ```:min``` package branch with alpine package version installed from alpine repos (Automatic Architecture Selection)
 * ```:current``` current branch with latest bleeding edge current version of nodejs (Automatic Architecture Selection)
-* ```:v16.14.2``` version number related to node.js version (Automatic Architecture Selection)
+* ```:v18.18.0``` version number related to node.js version (Automatic Architecture Selection)
 * ```:amd64```, ```:x86_64```  amd64 based on latest tag but amd64 architecture
 * ```:min-amd64```, ```:min-x86_64```  amd64 based on latest tag but amd64 architecture and includes alpine package version
 * ```:current-amd64```, ```:current-x86_64```  amd64 based on latest tag but amd64 architecture and includes current node.js
@@ -62,20 +62,21 @@ Node.js is a platform built on Chrome's JavaScript runtime for easily building f
 * ```:min-aarch64-min```, ```:min-arm64v8``` Armv8 based on latest tag but arm64 architecture and includes alpine package version
 * ```:current-aarch64```, ```:current-arm64v8``` Armv8 based on latest tag but arm64 architecture and includes current node.js
 
-## Layers & Sizes
+## 📏 Layers & Sizes
 
 ![Version](https://img.shields.io/badge/version-amd64-blue.svg?style=for-the-badge)
-![MicroBadger Layers (tag)](https://img.shields.io/microbadger/layers/yobasystems/alpine-nodejs/amd64.svg?style=for-the-badge)
-![MicroBadger Size (tag)](https://img.shields.io/microbadger/image-size/yobasystems/alpine-nodejs/amd64.svg?style=for-the-badge)
+![MicroBadger Layers (tag)](https://img.shields.io/docker/layers/yobasystems/alpine-nodejs/amd64.svg?style=for-the-badge)
+![MicroBadger Size (tag)](https://img.shields.io/docker/image-size/yobasystems/alpine-nodejs/amd64.svg?style=for-the-badge)
 
 ![Version](https://img.shields.io/badge/version-aarch64-blue.svg?style=for-the-badge)
-![MicroBadger Layers (tag)](https://img.shields.io/microbadger/layers/yobasystems/alpine-nodejs/aarch64.svg?style=for-the-badge)
-![MicroBadger Size (tag)](https://img.shields.io/microbadger/image-size/yobasystems/alpine-nodejs/aarch64.svg?style=for-the-badge)
+![MicroBadger Layers (tag)](https://img.shields.io/docker/layers/yobasystems/alpine-nodejs/aarch64.svg?style=for-the-badge)
+![MicroBadger Size (tag)](https://img.shields.io/docker/image-size/yobasystems/alpine-nodejs/aarch64.svg?style=for-the-badge)
 
 ![Version](https://img.shields.io/badge/version-armhf-blue.svg?style=for-the-badge)
-![MicroBadger Layers (tag)](https://img.shields.io/microbadger/layers/yobasystems/alpine-nodejs/armhf.svg?style=for-the-badge)
-![MicroBadger Size (tag)](https://img.shields.io/microbadger/image-size/yobasystems/alpine-nodejs/armhf.svg?style=for-the-badge)
+![MicroBadger Layers (tag)](https://img.shields.io/docker/layers/yobasystems/alpine-nodejs/armhf.svg?style=for-the-badge)
+![MicroBadger Size (tag)](https://img.shields.io/docker/image-size/yobasystems/alpine-nodejs/armhf.svg?style=for-the-badge)
 
+## 🚀 How to use this image
 ## Creating an instance
 
 ```docker run yobasystems/alpine-nodejs```
@@ -89,23 +90,24 @@ or
 ```docker run yobasystems/alpine-nodejs:current```
 
 
-## Source Repositories
 
-* [Github - yobasystems/alpine-nodejs](https://github.com/yobasystems/alpine-nodejs)
+## 📚 Source Repositories
 
-* [Gitlab - yobasystems/alpine-nodejs](https://gitlab.com/yobasystems/alpine-nodejs)
+* [Github - yobasystems/alpine](https://github.com/yobasystems/alpine-nodejs)
 
-* [Bitbucket - yobasystems/alpine-nodejs](https://bitbucket.org/yobasystems/alpine-nodejs/)
+* [Gitlab - yobasystems/alpine](https://gitlab.com/yobasystems/alpine-nodejs)
 
-
-## Container Registries
-
-* [Dockerhub - yobasystems/alpine-nodejs](https://hub.docker.com/r/yobasystems/alpine-nodejs/)
-
-* [Quay.io - yobasystems/alpine-nodejs](https://quay.io/repository/yobasystems/alpine-nodejs)
+* [Bitbucket - yobasystems/alpine](https://bitbucket.org/yobasystems/alpine-nodejs/)
 
 
-## Links
+## 🐳 Container Registries
+
+* [Dockerhub - yobasystems/alpine](https://hub.docker.com/r/yobasystems/alpine-nodejs/)
+
+* [Quay.io - yobasystems/alpine](https://quay.io/repository/yobasystems/alpine-nodejs)
+
+
+## 🔗 Links
 
 * [Yoba Systems](https://www.yobasystems.co.uk/)
 
@@ -117,7 +119,7 @@ or
 
 * [Maintainer - Dominic Taylor](https://github.com/dominictayloruk)
 
-## Donation
+## 💰 Donation
 
 [![BMAC](https://img.shields.io/badge/BUY%20ME%20A%20COFFEE-£5-blue.svg?style=for-the-badge&logo=buy-me-a-coffee)](https://www.buymeacoffee.com/dominictayloruk?new=1)
 
