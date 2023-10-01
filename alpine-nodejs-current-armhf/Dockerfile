@@ -21,7 +21,7 @@ LABEL maintainer="Dominic Taylor <dominic@yobasystems.co.uk>" \
 ARG NODE_VER=20.8.0
 ARG NPM_VER=10
 
-RUN apk -U add curl git make gcc g++ python3 linux-headers paxctl libgcc libstdc++ binutils-gold ca-certificates \
+RUN apk -U add bash curl git make gcc g++ gnupg python3 linux-headers paxctl libgcc libstdc++ binutils-gold ca-certificates ccache xz \
  && cd /tmp \
  && curl --silent --ssl https://nodejs.org/dist/v$NODE_VER/node-v$NODE_VER.tar.gz | tar zxf - \
  && cd node-v$NODE_VER \
@@ -32,17 +32,21 @@ RUN apk -U add curl git make gcc g++ python3 linux-headers paxctl libgcc libstdc
  && find /usr/lib/node_modules/npm -name test -o -name .bin -type d \
  | xargs rm -rf \
  && apk del \
+    bash \
     curl \
     git \
     make \
     gcc \
     g++ \
-    python \
+    gnupg \
+    python3 \
     linux-headers \
     paxctl \
     grep \
     binutils-gold \
     ca-certificates \
+    ccache \
+    xz \
  && rm -rf \
     /tmp/* \
     /var/cache/apk/* \
