@@ -79,15 +79,21 @@ Node.js is a platform built on Chrome's JavaScript runtime for easily building f
 ## 🚀 How to use this image
 ## Creating an instance
 
-```docker run yobasystems/alpine-nodejs```
+```
+docker run yobasystems/alpine-nodejs
+```
 
 or
 
-```docker run yobasystems/alpine-nodejs:min```
+```
+docker run yobasystems/alpine-nodejs:min
+```
 
 or
 
-```docker run yobasystems/alpine-nodejs:current```
+```
+docker run yobasystems/alpine-nodejs:current
+```
 
 
 
