@@ -4,14 +4,14 @@
 [![Docker Pulls](https://img.shields.io/docker/pulls/yobasystems/alpine-nodejs.svg?style=for-the-badge&logo=docker)](https://hub.docker.com/r/yobasystems/alpine-nodejs/)
 [![Docker Stars](https://img.shields.io/docker/stars/yobasystems/alpine-nodejs.svg?style=for-the-badge&logo=docker)](https://hub.docker.com/r/yobasystems/alpine-nodejs/)
 
-[![Alpine Version](https://img.shields.io/badge/Alpine%20version-v3.18.3-green.svg?style=for-the-badge)](https://alpinelinux.org/)
+[![Alpine Version](https://img.shields.io/badge/Alpine%20version-v3.18.4-green.svg?style=for-the-badge)](https://alpinelinux.org/)
 [![nodejs Version](https://img.shields.io/badge/nodejs%20LTS%20version-v18.18.0-green.svg?style=for-the-badge)](https://nodejs.org/)
 [![NPM Version](https://img.shields.io/badge/NPM%20version-v9.8.1-green.svg?style=for-the-badge)](https://npm.org)
 
 
 This container image [(yobasystems/alpine-nodejs)](https://hub.docker.com/r/yobasystems/alpine-nodejs/) is based on the minimal [Alpine Linux](https://alpinelinux.org/) with [Node.js LTS](https://nodejs.org/).
 
-### Alpine Version 3.18.3 (Released 2023-08-07)
+### Alpine Version 3.18.4 (Released 2023-09-28)
 
 ---
 ##### LTS
