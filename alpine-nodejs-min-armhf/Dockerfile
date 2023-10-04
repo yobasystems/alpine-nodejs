@@ -18,4 +18,6 @@ LABEL maintainer="Dominic Taylor <dominic@yobasystems.co.uk>" \
     org.opencontainers.image.revision=$VCS_REF \
     org.opencontainers.image.created=$BUILD_DATE
 
-RUN apk add --no-cache nodejs npm
+RUN addgroup -g 1000 node \
+    && adduser -u 1000 -G node -s /bin/sh -D node \
+    && apk add --no-cache nodejs npm
