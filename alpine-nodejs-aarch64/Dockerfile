@@ -22,41 +22,42 @@ ARG NODE_VER=18.18.0
 ARG NPM_VER=9
 
 RUN addgroup -g 1000 node \
-    && adduser -u 1000 -G node -s /bin/sh -D node \
-    && apk add --no-cache bash curl git make gcc g++ gnupg python3 linux-headers paxctl libgcc libstdc++ binutils-gold ca-certificates ccache xz \
-    && cd /tmp \
-    && curl --silent --ssl https://nodejs.org/dist/v$NODE_VER/node-v$NODE_VER.tar.gz | tar zxf - \
-    && cd node-v$NODE_VER \
-    && ./configure --prefix=/usr \
-    && make -j4 && make install \
-    && paxctl -cm /usr/bin/node \
-    && npm install -g npm@$NPM_VER \
-    && find /usr/lib/node_modules/npm -name test -o -name .bin -type d \
-      | xargs rm -rf \
-    && apk del \
-      bash \
-      curl \
-      git \
-      make \
-      gcc \
-      g++ \
-      gnupg \
-      python3 \
-      linux-headers \
-      paxctl \
-      grep \
-      binutils-gold \
-      ca-certificates \
-      ccache \
-      xz \
-    && rm -rf \
-      /tmp/* \
-      /var/cache/apk/* \
-      /root/.npm \
-      /root/.node-gyp \
-      /usr/lib/node_modules/npm/man \
-      /usr/lib/node_modules/npm/doc \
-      /usr/lib/node_modules/npm/html \
-      /usr/share/man
+ && adduser -u 1000 -G node -s /bin/sh -D node \
+ && apk -U add bash curl git make gcc g++ gnupg python3 linux-headers paxctl libgcc libstdc++ binutils-gold ca-certificates ccache xz \
+ && cd /tmp \
+ && curl --silent --ssl https://nodejs.org/dist/v$NODE_VER/node-v$NODE_VER.tar.gz | tar zxf - \
+ && cd node-v$NODE_VER \
+ && ./configure --prefix=/usr \
+ && make -j4 && make install \
+ && paxctl -cm /usr/bin/node \
+ && npm install -g npm@$NPM_VER \
+ && find /usr/lib/node_modules/npm -name test -o -name .bin -type d \
+ | xargs rm -rf \
+ && apk del \
+    bash \
+    curl \
+    git \
+    make \
+    gcc \
+    g++ \
+    gnupg \
+    python3 \
+    linux-headers \
+    paxctl \
+    grep \
+    binutils-gold \
+    ca-certificates \
+    ccache \
+    xz \
+ && rm -rf \
+    /tmp/* \
+    /var/cache/apk/* \
+    /root/.npm \
+    /root/.node-gyp \
+    /usr/lib/node_modules/npm/man \
+    /usr/lib/node_modules/npm/doc \
+    /usr/lib/node_modules/npm/html \
+    /usr/share/man
+
 
 CMD ["node", "-v"]
