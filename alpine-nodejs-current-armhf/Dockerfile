@@ -1,4 +1,4 @@
-FROM yobasystems/alpine:3.18.4-armhf
+FROM yobasystems/alpine:3.19.0-armhf
 
 ARG BUILD_DATE
 ARG VCS_REF
@@ -6,19 +6,19 @@ ARG VCS_REF
 LABEL maintainer="Dominic Taylor <dominic@yoba.systems>" \
     architecture="arm32v7/armhf" \
     nodejs-version="current" \
-    alpine-version="3.18.4" \
-    build="04-Oct-2023" \
+    alpine-version="3.19.0" \
+    build="10-Feb-2024" \
     org.opencontainers.image.title="alpine-nodejs" \
     org.opencontainers.image.description="Nodejs container image running on Alpine Linux" \
     org.opencontainers.image.authors="Dominic Taylor <dominic@yoba.systems>" \
     org.opencontainers.image.vendor="Yoba Systems" \
     org.opencontainers.image.version="current" \
     org.opencontainers.image.url="https://hub.docker.com/r/yobasystems/alpine-nodejs/" \
-    org.opencontainers.image.source="https://github.com/yobasystems/alpine-nodejs" \
+    org.opencontainers.image.source="https://github.com/yobasystems/alpine" \
     org.opencontainers.image.revision=$VCS_REF \
     org.opencontainers.image.created=$BUILD_DATE
 
-ARG NODE_VER=20.8.0
+ARG NODE_VER=21.6.1
 ARG NPM_VER=10
 
 RUN addgroup -g 1000 node \

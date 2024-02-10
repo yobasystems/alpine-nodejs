@@ -31,8 +31,7 @@ amd64 nodejs build:
     --build-arg BUILD_DATE=${COMMIT_TIME} -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:amd64
     -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:x86_64 -t $DOCKER_REGISTRY_DOCKERHUB_REPO:amd64
     -t $DOCKER_REGISTRY_DOCKERHUB_REPO:x86_64 -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:amd64
-    -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:x86_64 -t ${CI_APPLICATION_REPOSITORY}:${CI_APPLICATION_TAG}
-    .
+    -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:x86_64 -t ${CI_APPLICATION_REPOSITORY}:${CI_APPLICATION_TAG} --platform linux/amd64 .
   - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:amd64
   - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:x86_64
   - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
@@ -61,7 +60,7 @@ arm32v7 nodejs build:
     --build-arg BUILD_DATE=${COMMIT_TIME} -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:arm32v7
     -t $DOCKER_REGISTRY_DOCKERHUB_REPO:arm32v7 -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:arm32v7
     -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:armhf -t $DOCKER_REGISTRY_DOCKERHUB_REPO:armhf
-    -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:armhf .
+    -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:armhf --platform linux/arm/v7 .
   - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:arm32v7
   - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:armhf
   - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
@@ -89,7 +88,7 @@ arm64v8 nodejs build:
     --build-arg BUILD_DATE=${COMMIT_TIME} -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:arm64v8
     -t $DOCKER_REGISTRY_DOCKERHUB_REPO:arm64v8 -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:arm64v8
     -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:aarch64 -t $DOCKER_REGISTRY_DOCKERHUB_REPO:aarch64
-    -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:aarch64 .
+    -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:aarch64 --platform linux/arm64/v8 .
   - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:arm64v8
   - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:aarch64
   - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
@@ -117,7 +116,7 @@ amd64 nodejs min build:
     --build-arg BUILD_DATE=${COMMIT_TIME} -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min-amd64
     -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min-x86_64 -t $DOCKER_REGISTRY_DOCKERHUB_REPO:min-amd64
     -t $DOCKER_REGISTRY_DOCKERHUB_REPO:min-x86_64 -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:min-amd64
-    -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:min-x86_64 .
+    -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:min-x86_64 --platform linux/amd64 .
   - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min-amd64
   - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min-x86_64
   - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
@@ -145,7 +144,7 @@ arm32v7 nodejs min build:
     --build-arg BUILD_DATE=${COMMIT_TIME} -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min-arm32v7
     -t $DOCKER_REGISTRY_DOCKERHUB_REPO:min-arm32v7 -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:min-arm32v7
     -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min-armhf -t $DOCKER_REGISTRY_DOCKERHUB_REPO:min-armhf
-    -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:min-armhf .
+    -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:min-armhf --platform linux/arm/v7 .
   - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min-arm32v7
   - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min-armhf
   - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
@@ -173,7 +172,7 @@ arm64v8 nodejs min build:
     --build-arg BUILD_DATE=${COMMIT_TIME} -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min-arm64v8
     -t $DOCKER_REGISTRY_DOCKERHUB_REPO:min-arm64v8 -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:min-arm64v8
     -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min-aarch64 -t $DOCKER_REGISTRY_DOCKERHUB_REPO:min-aarch64
-    -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:min-aarch64 .
+    -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:min-aarch64 --platform linux/arm64/v8 .
   - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min-arm64v8
   - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min-aarch64
   - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
@@ -201,7 +200,7 @@ amd64 nodejs current build:
     --build-arg BUILD_DATE=${COMMIT_TIME} -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current-amd64
     -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current-x86_64 -t $DOCKER_REGISTRY_DOCKERHUB_REPO:current-amd64
     -t $DOCKER_REGISTRY_DOCKERHUB_REPO:current-x86_64 -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:current-amd64
-    -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:current-x86_64 .
+    -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:current-x86_64 --platform linux/amd64 .
   - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current-amd64
   - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current-x86_64
   - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
@@ -229,7 +228,7 @@ arm32v7 nodejs current build:
     --build-arg BUILD_DATE=${COMMIT_TIME} -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current-arm32v7
     -t $DOCKER_REGISTRY_DOCKERHUB_REPO:current-arm32v7 -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:current-arm32v7
     -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current-armhf -t $DOCKER_REGISTRY_DOCKERHUB_REPO:current-armhf
-    -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:current-armhf .
+    -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:current-armhf --platform linux/arm/v7 .
   - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current-arm32v7
   - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current-armhf
   - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
@@ -257,7 +256,7 @@ arm64v8 nodejs current build:
     --build-arg BUILD_DATE=${COMMIT_TIME} -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current-arm64v8
     -t $DOCKER_REGISTRY_DOCKERHUB_REPO:current-arm64v8 -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:current-arm64v8
     -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current-aarch64 -t $DOCKER_REGISTRY_DOCKERHUB_REPO:current-aarch64
-    -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:current-aarch64 .
+    -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:current-aarch64 --platform linux/arm64/v8 .
   - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current-arm64v8
   - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current-aarch64
   - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
@@ -285,9 +284,9 @@ gitlab manifest creation:
   - docker manifest annotate $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:latest $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:amd64
     --os linux --arch amd64
   - docker manifest annotate $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:latest $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:arm32v7
-    --os linux --arch arm
+    --os linux --arch arm --variant 7
   - docker manifest annotate $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:latest $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:arm64v8
-    --os linux --arch arm64
+    --os linux --arch arm64 --variant 8
   - docker manifest push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:latest
 dockerhub manifest creation:
   image: yobasystems/alpine-docker:dind
@@ -306,9 +305,9 @@ dockerhub manifest creation:
   - docker manifest annotate $DOCKER_REGISTRY_DOCKERHUB_REPO:latest $DOCKER_REGISTRY_DOCKERHUB_REPO:amd64
     --os linux --arch amd64
   - docker manifest annotate $DOCKER_REGISTRY_DOCKERHUB_REPO:latest $DOCKER_REGISTRY_DOCKERHUB_REPO:arm32v7
-    --os linux --arch arm
+    --os linux --arch arm --variant 7
   - docker manifest annotate $DOCKER_REGISTRY_DOCKERHUB_REPO:latest $DOCKER_REGISTRY_DOCKERHUB_REPO:arm64v8
-    --os linux --arch arm64
+    --os linux --arch arm64 --variant 8
   - docker manifest push $DOCKER_REGISTRY_DOCKERHUB_REPO:latest
 gitlab manifest min creation:
   image: yobasystems/alpine-docker:dind
@@ -327,9 +326,9 @@ gitlab manifest min creation:
   - docker manifest annotate $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min-amd64
     --os linux --arch amd64
   - docker manifest annotate $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min-arm32v7
-    --os linux --arch arm
+    --os linux --arch arm --variant 7
   - docker manifest annotate $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min-arm64v8
-    --os linux --arch arm64
+    --os linux --arch arm64 --variant 8
   - docker manifest push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min
 dockerhub manifest min creation:
   image: yobasystems/alpine-docker:dind
@@ -348,9 +347,9 @@ dockerhub manifest min creation:
   - docker manifest annotate $DOCKER_REGISTRY_DOCKERHUB_REPO:min $DOCKER_REGISTRY_DOCKERHUB_REPO:min-amd64
     --os linux --arch amd64
   - docker manifest annotate $DOCKER_REGISTRY_DOCKERHUB_REPO:min $DOCKER_REGISTRY_DOCKERHUB_REPO:min-arm32v7
-    --os linux --arch arm
+    --os linux --arch arm --variant 7
   - docker manifest annotate $DOCKER_REGISTRY_DOCKERHUB_REPO:min $DOCKER_REGISTRY_DOCKERHUB_REPO:min-arm64v8
-    --os linux --arch arm64
+    --os linux --arch arm64 --variant 8
   - docker manifest push $DOCKER_REGISTRY_DOCKERHUB_REPO:min
 gitlab manifest current creation:
   image: yobasystems/alpine-docker:dind
@@ -369,9 +368,9 @@ gitlab manifest current creation:
   - docker manifest annotate $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current-amd64
     --os linux --arch amd64
   - docker manifest annotate $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current-arm32v7
-    --os linux --arch arm
+    --os linux --arch arm --variant 7
   - docker manifest annotate $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current-arm64v8
-    --os linux --arch arm64
+    --os linux --arch arm64 --variant 8
   - docker manifest push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current
 dockerhub manifest current creation:
   image: yobasystems/alpine-docker:dind
@@ -390,9 +389,9 @@ dockerhub manifest current creation:
   - docker manifest annotate $DOCKER_REGISTRY_DOCKERHUB_REPO:current $DOCKER_REGISTRY_DOCKERHUB_REPO:current-amd64
     --os linux --arch amd64
   - docker manifest annotate $DOCKER_REGISTRY_DOCKERHUB_REPO:current $DOCKER_REGISTRY_DOCKERHUB_REPO:current-arm32v7
-    --os linux --arch arm
+    --os linux --arch arm --variant 7
   - docker manifest annotate $DOCKER_REGISTRY_DOCKERHUB_REPO:current $DOCKER_REGISTRY_DOCKERHUB_REPO:current-arm64v8
-    --os linux --arch arm64
+    --os linux --arch arm64 --variant 8
   - docker manifest push $DOCKER_REGISTRY_DOCKERHUB_REPO:current
 gitlab manifest version creation:
   image: yobasystems/alpine-docker:dind
@@ -406,15 +405,15 @@ gitlab manifest version creation:
   - docker pull $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:amd64
   - docker pull $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:arm32v7
   - docker pull $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:arm64v8
-  - docker manifest create $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:18.18.0 $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:amd64
+  - docker manifest create $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:20.11.0 $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:amd64
     $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:arm32v7 $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:arm64v8
-  - docker manifest annotate $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:18.18.0 $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:amd64
+  - docker manifest annotate $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:20.11.0 $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:amd64
     --os linux --arch amd64
-  - docker manifest annotate $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:18.18.0 $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:arm32v7
-    --os linux --arch arm
-  - docker manifest annotate $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:18.18.0 $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:arm64v8
-    --os linux --arch arm64
-  - docker manifest push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:18.18.0
+  - docker manifest annotate $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:20.11.0 $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:arm32v7
+    --os linux --arch arm --variant 7
+  - docker manifest annotate $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:20.11.0 $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:arm64v8
+    --os linux --arch arm64 --variant 8
+  - docker manifest push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:20.11.0
 dockerhub manifest version creation:
   image: yobasystems/alpine-docker:dind
   stage: manifest
@@ -427,14 +426,14 @@ dockerhub manifest version creation:
   - docker pull $DOCKER_REGISTRY_DOCKERHUB_REPO:amd64
   - docker pull $DOCKER_REGISTRY_DOCKERHUB_REPO:arm32v7
   - docker pull $DOCKER_REGISTRY_DOCKERHUB_REPO:arm64v8
-  - docker manifest create $DOCKER_REGISTRY_DOCKERHUB_REPO:18.18.0 $DOCKER_REGISTRY_DOCKERHUB_REPO:amd64
+  - docker manifest create $DOCKER_REGISTRY_DOCKERHUB_REPO:20.11.0 $DOCKER_REGISTRY_DOCKERHUB_REPO:amd64
     $DOCKER_REGISTRY_DOCKERHUB_REPO:arm32v7 $DOCKER_REGISTRY_DOCKERHUB_REPO:arm64v8
-  - docker manifest annotate $DOCKER_REGISTRY_DOCKERHUB_REPO:18.18.0 $DOCKER_REGISTRY_DOCKERHUB_REPO:amd64
+  - docker manifest annotate $DOCKER_REGISTRY_DOCKERHUB_REPO:20.11.0 $DOCKER_REGISTRY_DOCKERHUB_REPO:amd64
     --os linux --arch amd64
-  - docker manifest annotate $DOCKER_REGISTRY_DOCKERHUB_REPO:18.18.0 $DOCKER_REGISTRY_DOCKERHUB_REPO:arm32v7
-    --os linux --arch arm
-  - docker manifest annotate $DOCKER_REGISTRY_DOCKERHUB_REPO:18.18.0 $DOCKER_REGISTRY_DOCKERHUB_REPO:arm64v8
-    --os linux --arch arm64
-  - docker manifest push $DOCKER_REGISTRY_DOCKERHUB_REPO:18.18.0
+  - docker manifest annotate $DOCKER_REGISTRY_DOCKERHUB_REPO:20.11.0 $DOCKER_REGISTRY_DOCKERHUB_REPO:arm32v7
+    --os linux --arch arm --variant 7
+  - docker manifest annotate $DOCKER_REGISTRY_DOCKERHUB_REPO:20.11.0 $DOCKER_REGISTRY_DOCKERHUB_REPO:arm64v8
+    --os linux --arch arm64 --variant 8
+  - docker manifest push $DOCKER_REGISTRY_DOCKERHUB_REPO:20.11.0
 sast:
   stage: test
