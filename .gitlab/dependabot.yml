@@ -1,6 +1,26 @@
 version: 2
 updates:
   - package-ecosystem: docker
-    directory: /
+    directory: /alpine-nodejs-amd64/
     schedule:
       interval: weekly
+  - package-ecosystem: docker
+    directory: /alpine-nodejs-armhf/
+    schedule:
+      interval: weekly
+  - package-ecosystem: docker
+    directory: /alpine-nodejs-aarch64/
+    schedule:
+      interval: weekly
+  - package-ecosystem: docker
+    directory: /alpine-nodejs-min-amd64/
+    schedule:
+      interval: weekly
+  - package-ecosystem: docker
+    directory: /alpine-nodejs-min-armhf/
+    schedule:
+      interval: weekly
+  - package-ecosystem: docker
+    directory: /alpine-nodejs-min-aarch64/
+    schedule:
+      interval: weekly      
