@@ -1,26 +1,26 @@
-FROM yobasystems/alpine:3.19.1-amd64
+FROM yobasystems/alpine:3.20.2-amd64
 
 ARG BUILD_DATE
 ARG VCS_REF
 
 LABEL maintainer="Dominic Taylor <dominic@yoba.systems>" \
     architecture="amd64/x86_64" \
-    nodejs-version="20.12.2" \
-    alpine-version="3.19.1" \
-    build="13-Apr-2024" \
+    nodejs-version="20.16.0" \
+    alpine-version="3.20.2" \
+    build="19-Aug-2024" \
     org.opencontainers.image.title="alpine-nodejs" \
     org.opencontainers.image.description="Nodejs container image running on Alpine Linux" \
     org.opencontainers.image.authors="Dominic Taylor <dominic@yoba.systems>" \
     org.opencontainers.image.vendor="Yoba Systems" \
-    org.opencontainers.image.version="20.12.2" \
+    org.opencontainers.image.version="20.16.0" \
     org.opencontainers.image.url="https://hub.docker.com/r/yobasystems/alpine-nodejs/" \
     org.opencontainers.image.source="https://github.com/yobasystems/alpine-nodejs" \
-    org.opencontainers.image.base.name="docker.io/yobasystems/alpine:3.19.1" \
+    org.opencontainers.image.base.name="docker.io/yobasystems/alpine:3.20.2" \
     org.opencontainers.image.revision=$VCS_REF \
     org.opencontainers.image.created=$BUILD_DATE
 
-ARG NODE_VER=20.12.2
-ARG NPM_VER=9
+ARG NODE_VER=20.16.0
+ARG NPM_VER=10
 
 RUN addgroup -g 1000 node \
  && adduser -u 1000 -G node -s /bin/sh -D node \
