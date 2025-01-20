@@ -4,27 +4,27 @@
 [![Docker Pulls](https://img.shields.io/docker/pulls/yobasystems/alpine-nodejs.svg?style=for-the-badge&logo=docker)](https://hub.docker.com/r/yobasystems/alpine-nodejs/)
 [![Docker Stars](https://img.shields.io/docker/stars/yobasystems/alpine-nodejs.svg?style=for-the-badge&logo=docker)](https://hub.docker.com/r/yobasystems/alpine-nodejs/)
 
-[![Alpine Version](https://img.shields.io/badge/Alpine%20version-v3.20.2-green.svg?style=for-the-badge)](https://alpinelinux.org/)
-[![nodejs Version](https://img.shields.io/badge/nodejs%20LTS%20version-v20.16.0-green.svg?style=for-the-badge)](https://nodejs.org/)
-[![NPM Version](https://img.shields.io/badge/NPM%20version-v10.8.1-green.svg?style=for-the-badge)](https://npm.org)
+[![Alpine Version](https://img.shields.io/badge/Alpine%20version-v3.21.1-green.svg?style=for-the-badge)](https://alpinelinux.org/)
+[![nodejs Version](https://img.shields.io/badge/nodejs%20LTS%20version-v22.13.0-green.svg?style=for-the-badge)](https://nodejs.org/)
+[![NPM Version](https://img.shields.io/badge/NPM%20version-v10.9.2-green.svg?style=for-the-badge)](https://npm.org)
 
 
 This container image [(yobasystems/alpine-nodejs)](https://hub.docker.com/r/yobasystems/alpine-nodejs/) is based on the minimal [Alpine Linux](https://alpinelinux.org/) with [Node.js LTS](https://nodejs.org/).
 
-### Alpine Version 3.20.2 (Released 2024-07-22)
+### Alpine Version 3.21.1 (Released 2025-01-06)
 
 ---
 ##### LTS
-###### Node.js Version 20.16.0
-###### NPM Version 10.8.1
+###### Node.js Version 22.13.0
+###### NPM Version 10.9.2
 ---
 ##### CURRENT
-###### Node.js Version 22.6.0
-###### NPM Version 10.8.2
+###### Node.js Version 23.6.0
+###### NPM Version 10.9.2
 ---
 ##### MIN
-###### Node.js Version 20.15.1
-###### NPM Version 10.8.0
+###### Node.js Version 22.11.0
+###### NPM Version 10.9.1
 ----
 
 ## 🏔️ What is Alpine Linux?
@@ -51,7 +51,7 @@ Node.js is a platform built on Chrome's JavaScript runtime for easily building f
 * ```:latest``` latest branch based on lts nodejs (Automatic Architecture Selection)
 * ```:min``` package branch with alpine package version installed from alpine repos (Automatic Architecture Selection)
 * ```:current``` current branch with latest bleeding edge current version of nodejs (Automatic Architecture Selection)
-* ```:v20.16.0``` version number related to node.js version (Automatic Architecture Selection)
+* ```:v22.13.0``` version number related to node.js version (Automatic Architecture Selection)
 * ```:amd64```, ```:x86_64```  amd64 based on latest tag but amd64 architecture
 * ```:min-amd64```, ```:min-x86_64```  amd64 based on latest tag but amd64 architecture and includes alpine package version
 * ```:current-amd64```, ```:current-x86_64```  amd64 based on latest tag but amd64 architecture and includes current node.js
