@@ -8,432 +8,449 @@
 stages:
 - build
 - test
-- manifest
 - deploy
+- manifest
+
 include:
 - remote: https://gitlab.com/yobasystems/gitlab-ci-templates/raw/master/container_scanning_all_arch.yml
 - template: Security/Secret-Detection.gitlab-ci.yml
 - template: Security/SAST.gitlab-ci.yml
+
+.build_template: &build_definition
+  image: yobasystems/alpine-docker:dind
+  stage: build
+  script:
+    - echo "Build Timestamp ${CI_COMMIT_TIMESTAMP} - ${CI_COMMIT_SHORT_SHA}"
+    - echo "Building for ARCH=${ARCH}, PLATFORM=${PLATFORM}"
+    - |
+      if [[ "$NODE_VERSION" == "lts" ]]; then
+        NODE_VERSION=$CI_COMMIT_TAG
+      fi
+    - apk add --update git
+    - |
+      if [[ "$NODE_VERSION" == "current" ]]; then
+        cd alpine-nodejs-current-${ARCH}/
+      elif [[ "$NODE_VERSION" == "min" ]]; then
+        cd alpine-nodejs-min-${ARCH}/
+      else
+        cd alpine-nodejs-${ARCH}/
+      fi
+    - docker build
+      --build-arg VCS_REF=${CI_COMMIT_SHORT_SHA}
+      --build-arg BUILD_DATE=${CI_COMMIT_TIMESTAMP}
+      -t ${CI_REGISTRY_IMAGE}/${CI_COMMIT_SHORT_SHA}:${ARCH}${NODE_VERSION:+-$NODE_VERSION}
+      --platform linux/${PLATFORM}
+      .
+    - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token "$CI_REGISTRY" --password-stdin
+    - docker push ${CI_REGISTRY_IMAGE}/${CI_COMMIT_SHORT_SHA}:${ARCH}${NODE_VERSION:+-$NODE_VERSION}
+
+# Latest build jobs
 amd64 nodejs build:
-  image: yobasystems/alpine-docker:dind
-  stage: build
+  <<: *build_definition
   tags:
-  - amd64
+    - amd64
   variables:
-    CI_APPLICATION_REPOSITORY: "$CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG"
-    CI_APPLICATION_TAG: "$CI_COMMIT_SHA"
-  script:
-  - export COMMIT_TIME=$(git show -s --format=%ct $CI_APPLICATION_TAG)
-  - echo "$COMMIT_TIME" && echo "$CI_COMMIT_SHORT_SHA"
-  - apk add --update git
-  - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token "$DOCKER_REGISTRY" --password-stdin
-  - cd alpine-nodejs-amd64/ && docker build --build-arg VCS_REF=${CI_COMMIT_SHORT_SHA}
-    --build-arg BUILD_DATE=${COMMIT_TIME} -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:amd64
-    -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:x86_64 -t $DOCKER_REGISTRY_DOCKERHUB_REPO:amd64
-    -t $DOCKER_REGISTRY_DOCKERHUB_REPO:x86_64 -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:amd64
-    -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:x86_64 -t ${CI_APPLICATION_REPOSITORY}:${CI_APPLICATION_TAG} --platform linux/amd64 .
-  - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:amd64
-  - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:x86_64
-  - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-    && docker push $DOCKER_REGISTRY_DOCKERHUB_REPO:amd64
-  - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-    && docker push $DOCKER_REGISTRY_DOCKERHUB_REPO:x86_64
-  - echo "$QUAY_PASSWORD" | docker login -u "$QUAY_USERNAME" quay.io --password-stdin
-    && docker push $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:amd64
-  - echo "$QUAY_PASSWORD" | docker login -u "$QUAY_USERNAME" quay.io --password-stdin
-    && docker push $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:x86_64
-  - docker push ${CI_APPLICATION_REPOSITORY}:${CI_APPLICATION_TAG}
+    ARCH: amd64
+    PLATFORM: amd64
+
 arm32v7 nodejs build:
-  image: yobasystems/alpine-docker:dind
-  stage: build
+  <<: *build_definition
   tags:
-  - armhf
+    - armhf
   variables:
-    CI_APPLICATION_REPOSITORY: "$CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG"
-    CI_APPLICATION_TAG: "$CI_COMMIT_SHA"
-  script:
-  - export COMMIT_TIME=$(git show -s --format=%ct $CI_APPLICATION_TAG)
-  - echo "$COMMIT_TIME" && echo "$CI_COMMIT_SHORT_SHA"
-  - apk add --update git
-  - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token "$DOCKER_REGISTRY" --password-stdin
-  - cd alpine-nodejs-armhf/ && docker build --build-arg VCS_REF=${CI_COMMIT_SHORT_SHA}
-    --build-arg BUILD_DATE=${COMMIT_TIME} -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:arm32v7
-    -t $DOCKER_REGISTRY_DOCKERHUB_REPO:arm32v7 -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:arm32v7
-    -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:armhf -t $DOCKER_REGISTRY_DOCKERHUB_REPO:armhf
-    -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:armhf --platform linux/arm/v7 .
-  - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:arm32v7
-  - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:armhf
-  - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-    && docker push $DOCKER_REGISTRY_DOCKERHUB_REPO:arm32v7
-  - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-    && docker push $DOCKER_REGISTRY_DOCKERHUB_REPO:armhf
-  - echo "$QUAY_PASSWORD" | docker login -u "$QUAY_USERNAME" quay.io --password-stdin
-    && docker push $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:arm32v7
-  - echo "$QUAY_PASSWORD" | docker login -u "$QUAY_USERNAME" quay.io --password-stdin
-    && docker push $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:armhf
+    ARCH: armhf
+    PLATFORM: arm/v7
+
 arm64v8 nodejs build:
-  image: yobasystems/alpine-docker:dind
-  stage: build
+  <<: *build_definition
   tags:
-  - aarch64
+    - aarch64
   variables:
-    CI_APPLICATION_REPOSITORY: "$CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG"
-    CI_APPLICATION_TAG: "$CI_COMMIT_SHA"
-  script:
-  - export COMMIT_TIME=$(git show -s --format=%ct $CI_APPLICATION_TAG)
-  - echo "$COMMIT_TIME" && echo "$CI_COMMIT_SHORT_SHA"
-  - apk add --update git
-  - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token "$DOCKER_REGISTRY" --password-stdin
-  - cd alpine-nodejs-aarch64/ && docker build --build-arg VCS_REF=${CI_COMMIT_SHORT_SHA}
-    --build-arg BUILD_DATE=${COMMIT_TIME} -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:arm64v8
-    -t $DOCKER_REGISTRY_DOCKERHUB_REPO:arm64v8 -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:arm64v8
-    -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:aarch64 -t $DOCKER_REGISTRY_DOCKERHUB_REPO:aarch64
-    -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:aarch64 --platform linux/arm64/v8 .
-  - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:arm64v8
-  - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:aarch64
-  - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-    && docker push $DOCKER_REGISTRY_DOCKERHUB_REPO:arm64v8
-  - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-    && docker push $DOCKER_REGISTRY_DOCKERHUB_REPO:aarch64
-  - echo "$QUAY_PASSWORD" | docker login -u "$QUAY_USERNAME" quay.io --password-stdin
-    && docker push $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:arm64v8
-  - echo "$QUAY_PASSWORD" | docker login -u "$QUAY_USERNAME" quay.io --password-stdin
-    && docker push $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:aarch64
-amd64 nodejs min build:
-  image: yobasystems/alpine-docker:dind
-  stage: build
+    ARCH: aarch64
+    PLATFORM: arm64/v8
+
+# Current build jobs
+amd64 nodejs build current:
+  <<: *build_definition
   tags:
-  - amd64
+    - amd64
   variables:
-    CI_APPLICATION_REPOSITORY: "$CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG"
-    CI_APPLICATION_TAG: "$CI_COMMIT_SHA"
-  script:
-  - export COMMIT_TIME=$(git show -s --format=%ct $CI_APPLICATION_TAG)
-  - echo "$COMMIT_TIME" && echo "$CI_COMMIT_SHORT_SHA"
-  - apk add --update git
-  - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token "$DOCKER_REGISTRY" --password-stdin
-  - cd alpine-nodejs-min-amd64/ && docker build --build-arg VCS_REF=${CI_COMMIT_SHORT_SHA}
-    --build-arg BUILD_DATE=${COMMIT_TIME} -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min-amd64
-    -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min-x86_64 -t $DOCKER_REGISTRY_DOCKERHUB_REPO:min-amd64
-    -t $DOCKER_REGISTRY_DOCKERHUB_REPO:min-x86_64 -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:min-amd64
-    -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:min-x86_64 --platform linux/amd64 .
-  - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min-amd64
-  - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min-x86_64
-  - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-    && docker push $DOCKER_REGISTRY_DOCKERHUB_REPO:min-amd64
-  - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-    && docker push $DOCKER_REGISTRY_DOCKERHUB_REPO:min-x86_64
-  - echo "$QUAY_PASSWORD" | docker login -u "$QUAY_USERNAME" quay.io --password-stdin
-    && docker push $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:min-amd64
-  - echo "$QUAY_PASSWORD" | docker login -u "$QUAY_USERNAME" quay.io --password-stdin
-    && docker push $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:min-x86_64
-arm32v7 nodejs min build:
-  image: yobasystems/alpine-docker:dind
-  stage: build
+    ARCH: amd64
+    PLATFORM: amd64
+    NODE_VERSION: current
+
+arm32v7 nodejs build current:
+  <<: *build_definition
   tags:
-  - armhf
+    - armhf
   variables:
-    CI_APPLICATION_REPOSITORY: "$CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG"
-    CI_APPLICATION_TAG: "$CI_COMMIT_SHA"
-  script:
-  - export COMMIT_TIME=$(git show -s --format=%ct $CI_APPLICATION_TAG)
-  - echo "$COMMIT_TIME" && echo "$CI_COMMIT_SHORT_SHA"
-  - apk add --update git
-  - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token "$DOCKER_REGISTRY" --password-stdin
-  - cd alpine-nodejs-min-armhf/ && docker build --build-arg VCS_REF=${CI_COMMIT_SHORT_SHA}
-    --build-arg BUILD_DATE=${COMMIT_TIME} -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min-arm32v7
-    -t $DOCKER_REGISTRY_DOCKERHUB_REPO:min-arm32v7 -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:min-arm32v7
-    -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min-armhf -t $DOCKER_REGISTRY_DOCKERHUB_REPO:min-armhf
-    -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:min-armhf --platform linux/arm/v7 .
-  - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min-arm32v7
-  - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min-armhf
-  - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-    && docker push $DOCKER_REGISTRY_DOCKERHUB_REPO:min-arm32v7
-  - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-    && docker push $DOCKER_REGISTRY_DOCKERHUB_REPO:min-armhf
-  - echo "$QUAY_PASSWORD" | docker login -u "$QUAY_USERNAME" quay.io --password-stdin
-    && docker push $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:min-arm32v7
-  - echo "$QUAY_PASSWORD" | docker login -u "$QUAY_USERNAME" quay.io --password-stdin
-    && docker push $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:min-armhf
-arm64v8 nodejs min build:
-  image: yobasystems/alpine-docker:dind
-  stage: build
+    ARCH: armhf
+    PLATFORM: arm/v7
+    NODE_VERSION: current
+
+arm64v8 nodejs build current:
+  <<: *build_definition
   tags:
-  - aarch64
+    - aarch64
   variables:
-    CI_APPLICATION_REPOSITORY: "$CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG"
-    CI_APPLICATION_TAG: "$CI_COMMIT_SHA"
-  script:
-  - export COMMIT_TIME=$(git show -s --format=%ct $CI_APPLICATION_TAG)
-  - echo "$COMMIT_TIME" && echo "$CI_COMMIT_SHORT_SHA"
-  - apk add --update git
-  - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token "$DOCKER_REGISTRY" --password-stdin
-  - cd alpine-nodejs-min-aarch64/ && docker build --build-arg VCS_REF=${CI_COMMIT_SHORT_SHA}
-    --build-arg BUILD_DATE=${COMMIT_TIME} -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min-arm64v8
-    -t $DOCKER_REGISTRY_DOCKERHUB_REPO:min-arm64v8 -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:min-arm64v8
-    -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min-aarch64 -t $DOCKER_REGISTRY_DOCKERHUB_REPO:min-aarch64
-    -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:min-aarch64 --platform linux/arm64/v8 .
-  - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min-arm64v8
-  - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min-aarch64
-  - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-    && docker push $DOCKER_REGISTRY_DOCKERHUB_REPO:min-arm64v8
-  - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-    && docker push $DOCKER_REGISTRY_DOCKERHUB_REPO:min-aarch64
-  - echo "$QUAY_PASSWORD" | docker login -u "$QUAY_USERNAME" quay.io --password-stdin
-    && docker push $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:min-arm64v8
-  - echo "$QUAY_PASSWORD" | docker login -u "$QUAY_USERNAME" quay.io --password-stdin
-    && docker push $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:min-aarch64
-amd64 nodejs current build:
-  image: yobasystems/alpine-docker:dind
-  stage: build
+    ARCH: aarch64
+    PLATFORM: arm64/v8
+    NODE_VERSION: current
+
+# Min build jobs
+amd64 nodejs build min:
+  <<: *build_definition
   tags:
-  - amd64
+    - amd64
   variables:
-    CI_APPLICATION_REPOSITORY: "$CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG"
-    CI_APPLICATION_TAG: "$CI_COMMIT_SHA"
-  script:
-  - export COMMIT_TIME=$(git show -s --format=%ct $CI_APPLICATION_TAG)
-  - echo "$COMMIT_TIME" && echo "$CI_COMMIT_SHORT_SHA"
-  - apk add --update git
-  - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token "$DOCKER_REGISTRY" --password-stdin
-  - cd alpine-nodejs-current-amd64/ && docker build --build-arg VCS_REF=${CI_COMMIT_SHORT_SHA}
-    --build-arg BUILD_DATE=${COMMIT_TIME} -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current-amd64
-    -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current-x86_64 -t $DOCKER_REGISTRY_DOCKERHUB_REPO:current-amd64
-    -t $DOCKER_REGISTRY_DOCKERHUB_REPO:current-x86_64 -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:current-amd64
-    -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:current-x86_64 --platform linux/amd64 .
-  - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current-amd64
-  - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current-x86_64
-  - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-    && docker push $DOCKER_REGISTRY_DOCKERHUB_REPO:current-amd64
-  - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-    && docker push $DOCKER_REGISTRY_DOCKERHUB_REPO:current-x86_64
-  - echo "$QUAY_PASSWORD" | docker login -u "$QUAY_USERNAME" quay.io --password-stdin
-    && docker push $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:current-amd64
-  - echo "$QUAY_PASSWORD" | docker login -u "$QUAY_USERNAME" quay.io --password-stdin
-    && docker push $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:current-x86_64
-arm32v7 nodejs current build:
-  image: yobasystems/alpine-docker:dind
-  stage: build
+    ARCH: amd64
+    PLATFORM: amd64
+    NODE_VERSION: min
+
+arm32v7 nodejs build min:
+  <<: *build_definition
   tags:
-  - armhf
+    - armhf
   variables:
-    CI_APPLICATION_REPOSITORY: "$CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG"
-    CI_APPLICATION_TAG: "$CI_COMMIT_SHA"
-  script:
-  - export COMMIT_TIME=$(git show -s --format=%ct $CI_APPLICATION_TAG)
-  - echo "$COMMIT_TIME" && echo "$CI_COMMIT_SHORT_SHA"
-  - apk add --update git
-  - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token "$DOCKER_REGISTRY" --password-stdin
-  - cd alpine-nodejs-current-armhf/ && docker build --build-arg VCS_REF=${CI_COMMIT_SHORT_SHA}
-    --build-arg BUILD_DATE=${COMMIT_TIME} -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current-arm32v7
-    -t $DOCKER_REGISTRY_DOCKERHUB_REPO:current-arm32v7 -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:current-arm32v7
-    -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current-armhf -t $DOCKER_REGISTRY_DOCKERHUB_REPO:current-armhf
-    -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:current-armhf --platform linux/arm/v7 .
-  - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current-arm32v7
-  - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current-armhf
-  - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-    && docker push $DOCKER_REGISTRY_DOCKERHUB_REPO:current-arm32v7
-  - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-    && docker push $DOCKER_REGISTRY_DOCKERHUB_REPO:current-armhf
-  - echo "$QUAY_PASSWORD" | docker login -u "$QUAY_USERNAME" quay.io --password-stdin
-    && docker push $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:current-arm32v7
-  - echo "$QUAY_PASSWORD" | docker login -u "$QUAY_USERNAME" quay.io --password-stdin
-    && docker push $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:current-armhf
-arm64v8 nodejs current build:
-  image: yobasystems/alpine-docker:dind
-  stage: build
+    ARCH: armhf
+    PLATFORM: arm/v7
+    NODE_VERSION: min
+
+arm64v8 nodejs build min:
+  <<: *build_definition
   tags:
-  - aarch64
+    - aarch64
   variables:
-    CI_APPLICATION_REPOSITORY: "$CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG"
-    CI_APPLICATION_TAG: "$CI_COMMIT_SHA"
-  script:
-  - export COMMIT_TIME=$(git show -s --format=%ct $CI_APPLICATION_TAG)
-  - echo "$COMMIT_TIME" && echo "$CI_COMMIT_SHORT_SHA"
-  - apk add --update git
-  - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token "$DOCKER_REGISTRY" --password-stdin
-  - cd alpine-nodejs-current-aarch64/ && docker build --build-arg VCS_REF=${CI_COMMIT_SHORT_SHA}
-    --build-arg BUILD_DATE=${COMMIT_TIME} -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current-arm64v8
-    -t $DOCKER_REGISTRY_DOCKERHUB_REPO:current-arm64v8 -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:current-arm64v8
-    -t $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current-aarch64 -t $DOCKER_REGISTRY_DOCKERHUB_REPO:current-aarch64
-    -t $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:current-aarch64 --platform linux/arm64/v8 .
-  - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current-arm64v8
-  - docker push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current-aarch64
-  - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-    && docker push $DOCKER_REGISTRY_DOCKERHUB_REPO:current-arm64v8
-  - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-    && docker push $DOCKER_REGISTRY_DOCKERHUB_REPO:current-aarch64
-  - echo "$QUAY_PASSWORD" | docker login -u "$QUAY_USERNAME" quay.io --password-stdin
-    && docker push $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:current-arm64v8
-  - echo "$QUAY_PASSWORD" | docker login -u "$QUAY_USERNAME" quay.io --password-stdin
-    && docker push $DOCKER_REGISTRY_QUAY/$DOCKER_REGISTRY_QUAY_REPO:current-aarch64
-gitlab manifest creation:
-  image: yobasystems/alpine-docker:dind
-  stage: manifest
+    ARCH: aarch64
+    PLATFORM: arm64/v8
+    NODE_VERSION: min
+
+# LTS build jobs
+amd64 nodejs build lts:
+  <<: *build_definition
   tags:
-  - amd64
-  script:
-  - mkdir /root/.docker
-  - 'echo -e "{\n    \"experimental\": \"enabled\"\n}\n" >> ~/.docker/config.json'
-  - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token "$DOCKER_REGISTRY" --password-stdin
-  - docker pull $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:amd64
-  - docker pull $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:arm32v7
-  - docker pull $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:arm64v8
-  - docker manifest create $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:latest $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:amd64
-    $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:arm32v7 $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:arm64v8
-  - docker manifest annotate $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:latest $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:amd64
-    --os linux --arch amd64
-  - docker manifest annotate $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:latest $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:arm32v7
-    --os linux --arch arm --variant 7
-  - docker manifest annotate $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:latest $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:arm64v8
-    --os linux --arch arm64 --variant 8
-  - docker manifest push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:latest
-dockerhub manifest creation:
-  image: yobasystems/alpine-docker:dind
-  stage: manifest
+    - amd64
+  variables:
+    ARCH: amd64
+    PLATFORM: amd64
+    NODE_VERSION: lts
+
+arm32v7 nodejs build lts:
+  <<: *build_definition
   tags:
-  - amd64
-  script:
-  - mkdir /root/.docker
-  - 'echo -e "{\n    \"experimental\": \"enabled\"\n}\n" >> ~/.docker/config.json'
-  - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-  - docker pull $DOCKER_REGISTRY_DOCKERHUB_REPO:amd64
-  - docker pull $DOCKER_REGISTRY_DOCKERHUB_REPO:arm32v7
-  - docker pull $DOCKER_REGISTRY_DOCKERHUB_REPO:arm64v8
-  - docker manifest create $DOCKER_REGISTRY_DOCKERHUB_REPO:latest $DOCKER_REGISTRY_DOCKERHUB_REPO:amd64
-    $DOCKER_REGISTRY_DOCKERHUB_REPO:arm32v7 $DOCKER_REGISTRY_DOCKERHUB_REPO:arm64v8
-  - docker manifest annotate $DOCKER_REGISTRY_DOCKERHUB_REPO:latest $DOCKER_REGISTRY_DOCKERHUB_REPO:amd64
-    --os linux --arch amd64
-  - docker manifest annotate $DOCKER_REGISTRY_DOCKERHUB_REPO:latest $DOCKER_REGISTRY_DOCKERHUB_REPO:arm32v7
-    --os linux --arch arm --variant 7
-  - docker manifest annotate $DOCKER_REGISTRY_DOCKERHUB_REPO:latest $DOCKER_REGISTRY_DOCKERHUB_REPO:arm64v8
-    --os linux --arch arm64 --variant 8
-  - docker manifest push $DOCKER_REGISTRY_DOCKERHUB_REPO:latest
-gitlab manifest min creation:
-  image: yobasystems/alpine-docker:dind
-  stage: manifest
+    - armhf
+  variables:
+    ARCH: armhf
+    PLATFORM: arm/v7
+    NODE_VERSION: lts
+
+arm64v8 nodejs build lts:
+  <<: *build_definition
   tags:
-  - amd64
-  script:
-  - mkdir /root/.docker
-  - 'echo -e "{\n    \"experimental\": \"enabled\"\n}\n" >> ~/.docker/config.json'
-  - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token "$DOCKER_REGISTRY" --password-stdin
-  - docker pull $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min-amd64
-  - docker pull $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min-arm32v7
-  - docker pull $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min-arm64v8
-  - docker manifest create $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min-amd64
-    $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min-arm32v7 $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min-arm64v8
-  - docker manifest annotate $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min-amd64
-    --os linux --arch amd64
-  - docker manifest annotate $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min-arm32v7
-    --os linux --arch arm --variant 7
-  - docker manifest annotate $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min-arm64v8
-    --os linux --arch arm64 --variant 8
-  - docker manifest push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:min
-dockerhub manifest min creation:
-  image: yobasystems/alpine-docker:dind
-  stage: manifest
-  tags:
-  - amd64
-  script:
-  - mkdir /root/.docker
-  - 'echo -e "{\n    \"experimental\": \"enabled\"\n}\n" >> ~/.docker/config.json'
-  - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-  - docker pull $DOCKER_REGISTRY_DOCKERHUB_REPO:min-amd64
-  - docker pull $DOCKER_REGISTRY_DOCKERHUB_REPO:min-arm32v7
-  - docker pull $DOCKER_REGISTRY_DOCKERHUB_REPO:min-arm64v8
-  - docker manifest create $DOCKER_REGISTRY_DOCKERHUB_REPO:min $DOCKER_REGISTRY_DOCKERHUB_REPO:min-amd64
-    $DOCKER_REGISTRY_DOCKERHUB_REPO:min-arm32v7 $DOCKER_REGISTRY_DOCKERHUB_REPO:min-arm64v8
-  - docker manifest annotate $DOCKER_REGISTRY_DOCKERHUB_REPO:min $DOCKER_REGISTRY_DOCKERHUB_REPO:min-amd64
-    --os linux --arch amd64
-  - docker manifest annotate $DOCKER_REGISTRY_DOCKERHUB_REPO:min $DOCKER_REGISTRY_DOCKERHUB_REPO:min-arm32v7
-    --os linux --arch arm --variant 7
-  - docker manifest annotate $DOCKER_REGISTRY_DOCKERHUB_REPO:min $DOCKER_REGISTRY_DOCKERHUB_REPO:min-arm64v8
-    --os linux --arch arm64 --variant 8
-  - docker manifest push $DOCKER_REGISTRY_DOCKERHUB_REPO:min
-gitlab manifest current creation:
-  image: yobasystems/alpine-docker:dind
-  stage: manifest
-  tags:
-  - amd64
-  script:
-  - mkdir /root/.docker
-  - 'echo -e "{\n    \"experimental\": \"enabled\"\n}\n" >> ~/.docker/config.json'
-  - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token "$DOCKER_REGISTRY" --password-stdin
-  - docker pull $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current-amd64
-  - docker pull $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current-arm32v7
-  - docker pull $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current-arm64v8
-  - docker manifest create $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current-amd64
-    $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current-arm32v7 $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current-arm64v8
-  - docker manifest annotate $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current-amd64
-    --os linux --arch amd64
-  - docker manifest annotate $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current-arm32v7
-    --os linux --arch arm --variant 7
-  - docker manifest annotate $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current-arm64v8
-    --os linux --arch arm64 --variant 8
-  - docker manifest push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:current
-dockerhub manifest current creation:
-  image: yobasystems/alpine-docker:dind
-  stage: manifest
-  tags:
-  - amd64
-  script:
-  - mkdir /root/.docker
-  - 'echo -e "{\n    \"experimental\": \"enabled\"\n}\n" >> ~/.docker/config.json'
-  - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-  - docker pull $DOCKER_REGISTRY_DOCKERHUB_REPO:current-amd64
-  - docker pull $DOCKER_REGISTRY_DOCKERHUB_REPO:current-arm32v7
-  - docker pull $DOCKER_REGISTRY_DOCKERHUB_REPO:current-arm64v8
-  - docker manifest create $DOCKER_REGISTRY_DOCKERHUB_REPO:current $DOCKER_REGISTRY_DOCKERHUB_REPO:current-amd64
-    $DOCKER_REGISTRY_DOCKERHUB_REPO:current-arm32v7 $DOCKER_REGISTRY_DOCKERHUB_REPO:current-arm64v8
-  - docker manifest annotate $DOCKER_REGISTRY_DOCKERHUB_REPO:current $DOCKER_REGISTRY_DOCKERHUB_REPO:current-amd64
-    --os linux --arch amd64
-  - docker manifest annotate $DOCKER_REGISTRY_DOCKERHUB_REPO:current $DOCKER_REGISTRY_DOCKERHUB_REPO:current-arm32v7
-    --os linux --arch arm --variant 7
-  - docker manifest annotate $DOCKER_REGISTRY_DOCKERHUB_REPO:current $DOCKER_REGISTRY_DOCKERHUB_REPO:current-arm64v8
-    --os linux --arch arm64 --variant 8
-  - docker manifest push $DOCKER_REGISTRY_DOCKERHUB_REPO:current
-gitlab manifest version creation:
-  image: yobasystems/alpine-docker:dind
-  stage: manifest
-  tags:
-  - amd64
-  script:
-  - mkdir /root/.docker
-  - 'echo -e "{\n    \"experimental\": \"enabled\"\n}\n" >> ~/.docker/config.json'
-  - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token "$DOCKER_REGISTRY" --password-stdin
-  - docker pull $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:amd64
-  - docker pull $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:arm32v7
-  - docker pull $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:arm64v8
-  - docker manifest create $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:22.13.0 $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:amd64
-    $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:arm32v7 $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:arm64v8
-  - docker manifest annotate $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:22.13.0 $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:amd64
-    --os linux --arch amd64
-  - docker manifest annotate $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:22.13.0 $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:arm32v7
-    --os linux --arch arm --variant 7
-  - docker manifest annotate $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:22.13.0 $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:arm64v8
-    --os linux --arch arm64 --variant 8
-  - docker manifest push $DOCKER_REGISTRY/$DOCKER_REGISTRY_REPO:22.13.0
-dockerhub manifest version creation:
-  image: yobasystems/alpine-docker:dind
-  stage: manifest
-  tags:
-  - amd64
-  script:
-  - mkdir /root/.docker
-  - 'echo -e "{\n    \"experimental\": \"enabled\"\n}\n" >> ~/.docker/config.json'
-  - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-  - docker pull $DOCKER_REGISTRY_DOCKERHUB_REPO:amd64
-  - docker pull $DOCKER_REGISTRY_DOCKERHUB_REPO:arm32v7
-  - docker pull $DOCKER_REGISTRY_DOCKERHUB_REPO:arm64v8
-  - docker manifest create $DOCKER_REGISTRY_DOCKERHUB_REPO:22.13.0 $DOCKER_REGISTRY_DOCKERHUB_REPO:amd64
-    $DOCKER_REGISTRY_DOCKERHUB_REPO:arm32v7 $DOCKER_REGISTRY_DOCKERHUB_REPO:arm64v8
-  - docker manifest annotate $DOCKER_REGISTRY_DOCKERHUB_REPO:22.13.0 $DOCKER_REGISTRY_DOCKERHUB_REPO:amd64
-    --os linux --arch amd64
-  - docker manifest annotate $DOCKER_REGISTRY_DOCKERHUB_REPO:22.13.0 $DOCKER_REGISTRY_DOCKERHUB_REPO:arm32v7
-    --os linux --arch arm --variant 7
-  - docker manifest annotate $DOCKER_REGISTRY_DOCKERHUB_REPO:22.13.0 $DOCKER_REGISTRY_DOCKERHUB_REPO:arm64v8
-    --os linux --arch arm64 --variant 8
-  - docker manifest push $DOCKER_REGISTRY_DOCKERHUB_REPO:22.13.0
+    - aarch64
+  variables:
+    ARCH: aarch64
+    PLATFORM: arm64/v8
+    NODE_VERSION: lts
+
 sast:
   stage: test
+
+.deploy_template: &deploy_definition
+  image: yobasystems/alpine-docker:dind
+  stage: deploy
+  rules:
+    - if: $CI_COMMIT_TAG
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  script:
+    - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token "$CI_REGISTRY" --password-stdin
+    - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+    - echo "$QUAY_PASSWORD" | docker login -u "$QUAY_USERNAME" quay.io --password-stdin
+    - echo "$GITHUB_TOKEN" | docker login ghcr.io -u "$GITHUB_USERNAME" --password-stdin
+    - docker pull ${CI_REGISTRY_IMAGE}/${CI_COMMIT_SHORT_SHA}:${ARCH}${NODE_VERSION:+-$NODE_VERSION}
+    - docker tag ${CI_REGISTRY_IMAGE}/${CI_COMMIT_SHORT_SHA}:${ARCH}${NODE_VERSION:+-$NODE_VERSION} $CI_REGISTRY_IMAGE:${ARCH}${NODE_VERSION:+-$NODE_VERSION}
+    - docker tag ${CI_REGISTRY_IMAGE}/${CI_COMMIT_SHORT_SHA}:${ARCH}${NODE_VERSION:+-$NODE_VERSION} $DOCKER_REGISTRY_DOCKERHUB_REPO:${ARCH}${NODE_VERSION:+-$NODE_VERSION}
+    - docker tag ${CI_REGISTRY_IMAGE}/${CI_COMMIT_SHORT_SHA}:${ARCH}${NODE_VERSION:+-$NODE_VERSION} quay.io/$DOCKER_REGISTRY_QUAY_REPO:${ARCH}${NODE_VERSION:+-$NODE_VERSION}
+    - docker tag ${CI_REGISTRY_IMAGE}/${CI_COMMIT_SHORT_SHA}:${ARCH}${NODE_VERSION:+-$NODE_VERSION} ghcr.io/$DOCKER_REGISTRY_GHCR_REPO:${ARCH}${NODE_VERSION:+-$NODE_VERSION}
+    - docker tag ${CI_REGISTRY_IMAGE}/${CI_COMMIT_SHORT_SHA}:${ARCH}${NODE_VERSION:+-$NODE_VERSION} $CI_REGISTRY_IMAGE:${ARCH2}${NODE_VERSION:+-$NODE_VERSION}
+    - docker tag ${CI_REGISTRY_IMAGE}/${CI_COMMIT_SHORT_SHA}:${ARCH}${NODE_VERSION:+-$NODE_VERSION} $DOCKER_REGISTRY_DOCKERHUB_REPO:${ARCH2}${NODE_VERSION:+-$NODE_VERSION}
+    - docker tag ${CI_REGISTRY_IMAGE}/${CI_COMMIT_SHORT_SHA}:${ARCH}${NODE_VERSION:+-$NODE_VERSION} quay.io/$DOCKER_REGISTRY_QUAY_REPO:${ARCH2}${NODE_VERSION:+-$NODE_VERSION}
+    - docker tag ${CI_REGISTRY_IMAGE}/${CI_COMMIT_SHORT_SHA}:${ARCH}${NODE_VERSION:+-$NODE_VERSION} ghcr.io/$DOCKER_REGISTRY_GHCR_REPO:${ARCH2}${NODE_VERSION:+-$NODE_VERSION}
+    - docker push $CI_REGISTRY_IMAGE:${ARCH}${NODE_VERSION:+-$NODE_VERSION}
+    - docker push $DOCKER_REGISTRY_DOCKERHUB_REPO:${ARCH}${NODE_VERSION:+-$NODE_VERSION}
+    - docker push quay.io/$DOCKER_REGISTRY_QUAY_REPO:${ARCH}${NODE_VERSION:+-$NODE_VERSION}
+    - docker push ghcr.io/$DOCKER_REGISTRY_GHCR_REPO:${ARCH}${NODE_VERSION:+-$NODE_VERSION}
+    - docker push $CI_REGISTRY_IMAGE:${ARCH2}${NODE_VERSION:+-$NODE_VERSION}
+    - docker push $DOCKER_REGISTRY_DOCKERHUB_REPO:${ARCH2}${NODE_VERSION:+-$NODE_VERSION}
+    - docker push quay.io/$DOCKER_REGISTRY_QUAY_REPO:${ARCH2}${NODE_VERSION:+-$NODE_VERSION}
+    - docker push ghcr.io/$DOCKER_REGISTRY_GHCR_REPO:${ARCH2}${NODE_VERSION:+-$NODE_VERSION}
+    - |
+      if [[ "$CI_COMMIT_TAG" ]]; then
+        docker tag ${CI_REGISTRY_IMAGE}/${CI_COMMIT_SHORT_SHA}:${ARCH}${NODE_VERSION:+-$NODE_VERSION} $CI_REGISTRY_IMAGE:${CI_COMMIT_TAG}-${ARCH}${NODE_VERSION:+-$NODE_VERSION}
+        docker tag ${CI_REGISTRY_IMAGE}/${CI_COMMIT_SHORT_SHA}:${ARCH}${NODE_VERSION:+-$NODE_VERSION} $DOCKER_REGISTRY_DOCKERHUB_REPO:${CI_COMMIT_TAG}-${ARCH}${NODE_VERSION:+-$NODE_VERSION}
+        docker tag ${CI_REGISTRY_IMAGE}/${CI_COMMIT_SHORT_SHA}:${ARCH}${NODE_VERSION:+-$NODE_VERSION} quay.io/$DOCKER_REGISTRY_QUAY_REPO:${CI_COMMIT_TAG}-${ARCH}${NODE_VERSION:+-$NODE_VERSION}
+        docker tag ${CI_REGISTRY_IMAGE}/${CI_COMMIT_SHORT_SHA}:${ARCH}${NODE_VERSION:+-$NODE_VERSION} ghcr.io/$DOCKER_REGISTRY_GHCR_REPO:${CI_COMMIT_TAG}-${ARCH}${NODE_VERSION:+-$NODE_VERSION}
+        docker tag ${CI_REGISTRY_IMAGE}/${CI_COMMIT_SHORT_SHA}:${ARCH}${NODE_VERSION:+-$NODE_VERSION} $CI_REGISTRY_IMAGE:${CI_COMMIT_TAG}-${ARCH2}${NODE_VERSION:+-$NODE_VERSION}
+        docker tag ${CI_REGISTRY_IMAGE}/${CI_COMMIT_SHORT_SHA}:${ARCH}${NODE_VERSION:+-$NODE_VERSION} $DOCKER_REGISTRY_DOCKERHUB_REPO:${CI_COMMIT_TAG}-${ARCH2}${NODE_VERSION:+-$NODE_VERSION}
+        docker tag ${CI_REGISTRY_IMAGE}/${CI_COMMIT_SHORT_SHA}:${ARCH}${NODE_VERSION:+-$NODE_VERSION} quay.io/$DOCKER_REGISTRY_QUAY_REPO:${CI_COMMIT_TAG}-${ARCH2}${NODE_VERSION:+-$NODE_VERSION}
+        docker tag ${CI_REGISTRY_IMAGE}/${CI_COMMIT_SHORT_SHA}:${ARCH}${NODE_VERSION:+-$NODE_VERSION} ghcr.io/$DOCKER_REGISTRY_GHCR_REPO:${CI_COMMIT_TAG}-${ARCH2}${NODE_VERSION:+-$NODE_VERSION}
+        docker push $CI_REGISTRY_IMAGE:${CI_COMMIT_TAG}-${ARCH}${NODE_VERSION:+-$NODE_VERSION}
+        docker push $DOCKER_REGISTRY_DOCKERHUB_REPO:${CI_COMMIT_TAG}-${ARCH}${NODE_VERSION:+-$NODE_VERSION}
+        docker push quay.io/$DOCKER_REGISTRY_QUAY_REPO:${CI_COMMIT_TAG}-${ARCH}${NODE_VERSION:+-$NODE_VERSION}
+        docker push ghcr.io/$DOCKER_REGISTRY_GHCR_REPO:${CI_COMMIT_TAG}-${ARCH}${NODE_VERSION:+-$NODE_VERSION}
+        docker push $CI_REGISTRY_IMAGE:${CI_COMMIT_TAG}-${ARCH2}${NODE_VERSION:+-$NODE_VERSION}
+        docker push $DOCKER_REGISTRY_DOCKERHUB_REPO:${CI_COMMIT_TAG}-${ARCH2}${NODE_VERSION:+-$NODE_VERSION}
+        docker push quay.io/$DOCKER_REGISTRY_QUAY_REPO:${CI_COMMIT_TAG}-${ARCH2}${NODE_VERSION:+-$NODE_VERSION}
+        docker push ghcr.io/$DOCKER_REGISTRY_GHCR_REPO:${CI_COMMIT_TAG}-${ARCH2}${NODE_VERSION:+-$NODE_VERSION}
+      fi
+
+# Latest deploy jobs
+amd64 nodejs deploy:
+  <<: *deploy_definition
+  tags:
+    - amd64
+  variables:
+    ARCH: amd64
+    ARCH2: x86_64
+    PLATFORM: amd64
+  needs:
+    - amd64 nodejs build
+
+arm32v7 nodejs deploy:
+  <<: *deploy_definition
+  tags:
+    - armhf
+  variables:
+    ARCH: armhf
+    ARCH2: arm32v7
+    PLATFORM: arm/v7
+  needs:
+    - arm32v7 nodejs build
+
+arm64v8 nodejs deploy:
+  <<: *deploy_definition
+  tags:
+    - aarch64
+  variables:
+    ARCH: aarch64
+    ARCH2: arm64v8
+    PLATFORM: arm64/v8
+  needs:
+    - arm64v8 nodejs build
+
+# Current deploy jobs
+amd64 nodejs deploy current:
+  <<: *deploy_definition
+  tags:
+    - amd64
+  variables:
+    ARCH: amd64
+    ARCH2: x86_64
+    PLATFORM: amd64
+    NODE_VERSION: current
+  needs:
+    - amd64 nodejs build current
+
+arm32v7 nodejs deploy current:
+  <<: *deploy_definition
+  tags:
+    - armhf
+  variables:
+    ARCH: armhf
+    ARCH2: arm32v7
+    PLATFORM: arm/v7
+    NODE_VERSION: current
+  needs:
+    - arm32v7 nodejs build current
+
+arm64v8 nodejs deploy current:
+  <<: *deploy_definition
+  tags:
+    - aarch64
+  variables:
+    ARCH: aarch64
+    ARCH2: arm64v8
+    PLATFORM: arm64/v8
+    NODE_VERSION: current
+  needs:
+    - arm64v8 nodejs build current
+
+# Min deploy jobs
+amd64 nodejs deploy min:
+  <<: *deploy_definition
+  tags:
+    - amd64
+  variables:
+    ARCH: amd64
+    ARCH2: x86_64
+    PLATFORM: amd64
+    NODE_VERSION: min
+  needs:
+    - amd64 nodejs build min
+
+arm32v7 nodejs deploy min:
+  <<: *deploy_definition
+  tags:
+    - armhf
+  variables:
+    ARCH: armhf
+    ARCH2: arm32v7
+    PLATFORM: arm/v7
+    NODE_VERSION: min
+  needs:
+    - arm32v7 nodejs build min
+
+arm64v8 nodejs deploy min:
+  <<: *deploy_definition
+  tags:
+    - aarch64
+  variables:
+    ARCH: aarch64
+    ARCH2: arm64v8
+    PLATFORM: arm64/v8
+    NODE_VERSION: min
+  needs:
+    - arm64v8 nodejs build min
+
+# LTS deploy jobs
+amd64 nodejs deploy lts:
+  <<: *deploy_definition
+  tags:
+    - amd64
+  variables:
+    ARCH: amd64
+    ARCH2: x86_64
+    PLATFORM: amd64
+    NODE_VERSION: lts
+  needs:
+    - amd64 nodejs build lts
+
+arm32v7 nodejs deploy lts:
+  <<: *deploy_definition
+  tags:
+    - armhf
+  variables:
+    ARCH: armhf
+    ARCH2: arm32v7
+    PLATFORM: arm/v7
+    NODE_VERSION: lts
+  needs:
+    - arm32v7 nodejs build lts
+
+arm64v8 nodejs deploy lts:
+  <<: *deploy_definition
+  tags:
+    - aarch64
+  variables:
+    ARCH: aarch64
+    ARCH2: arm64v8
+    PLATFORM: arm64/v8
+    NODE_VERSION: lts
+  needs:
+    - arm64v8 nodejs build lts
+
+# Manifest jobs for current, min, and lts
+manifest creation current:
+  image: yobasystems/alpine-docker:dind
+  stage: manifest
+  needs:
+    - amd64 nodejs deploy current
+    - arm32v7 nodejs deploy current
+    - arm64v8 nodejs deploy current
+  rules:
+    - if: $CI_COMMIT_TAG
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  script:
+    - mkdir -p ~/.docker
+    - echo '{"experimental":"enabled"}' > ~/.docker/config.json
+    - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token "$CI_REGISTRY" --password-stdin
+    - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+    - echo "$QUAY_PASSWORD" | docker login -u "$QUAY_USERNAME" quay.io --password-stdin
+    - echo "$GITHUB_TOKEN" | docker login ghcr.io -u "$GITHUB_USERNAME" --password-stdin
+    - |
+      create_and_push_manifest() {
+        repo=$1
+        tag=$2
+        docker manifest create $repo:$tag \
+          $repo:amd64-current \
+          $repo:armhf-current \
+          $repo:aarch64-current
+        docker manifest annotate $repo:$tag $repo:amd64-current --os linux --arch amd64
+        docker manifest annotate $repo:$tag $repo:armhf-current --os linux --arch arm --variant v7
+        docker manifest annotate $repo:$tag $repo:aarch64-current --os linux --arch arm64 --variant v8
+        docker manifest push $repo:$tag
+      }
+    - |
+      for repo in $CI_REGISTRY_IMAGE $DOCKER_REGISTRY_DOCKERHUB_REPO quay.io/$DOCKER_REGISTRY_QUAY_REPO ghcr.io/$DOCKER_REGISTRY_GHCR_REPO; do
+        create_and_push_manifest $repo current
+      done
+
+manifest creation min:
+  image: yobasystems/alpine-docker:dind
+  stage: manifest
+  needs:
+    - amd64 nodejs deploy min
+    - arm32v7 nodejs deploy min
+    - arm64v8 nodejs deploy min
+  rules:
+    - if: $CI_COMMIT_TAG
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  script:
+    - mkdir -p ~/.docker
+    - echo '{"experimental":"enabled"}' > ~/.docker/config.json
+    - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token "$CI_REGISTRY" --password-stdin
+    - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+    - echo "$QUAY_PASSWORD" | docker login -u "$QUAY_USERNAME" quay.io --password-stdin
+    - echo "$GITHUB_TOKEN" | docker login ghcr.io -u "$GITHUB_USERNAME" --password-stdin
+    - |
+      create_and_push_manifest() {
+        repo=$1
+        tag=$2
+        docker manifest create $repo:$tag \
+          $repo:amd64-min \
+          $repo:armhf-min \
+          $repo:aarch64-min
+        docker manifest annotate $repo:$tag $repo:amd64-min --os linux --arch amd64
+        docker manifest annotate $repo:$tag $repo:armhf-min --os linux --arch arm --variant v7
+        docker manifest annotate $repo:$tag $repo:aarch64-min --os linux --arch arm64 --variant v8
+        docker manifest push $repo:$tag
+      }
+    - |
+      for repo in $CI_REGISTRY_IMAGE $DOCKER_REGISTRY_DOCKERHUB_REPO quay.io/$DOCKER_REGISTRY_QUAY_REPO ghcr.io/$DOCKER_REGISTRY_GHCR_REPO; do
+        create_and_push_manifest $repo min
+      done
+
+manifest creation lts:
+  image: yobasystems/alpine-docker:dind
+  stage: manifest
+  needs:
+    - amd64 nodejs deploy lts
+    - arm32v7 nodejs deploy lts
+    - arm64v8 nodejs deploy lts
+  rules:
+    - if: $CI_COMMIT_TAG
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  script:
+    - mkdir -p ~/.docker
+    - echo '{"experimental":"enabled"}' > ~/.docker/config.json
+    - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token "$CI_REGISTRY" --password-stdin
+    - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+    - echo "$QUAY_PASSWORD" | docker login -u "$QUAY_USERNAME" quay.io --password-stdin
+    - echo "$GITHUB_TOKEN" | docker login ghcr.io -u "$GITHUB_USERNAME" --password-stdin
+    - |
+      create_and_push_manifest() {
+        repo=$1
+        tag=$2
+        docker manifest create $repo:$tag \
+          $repo:amd64-lts \
+          $repo:armhf-lts \
+          $repo:aarch64-lts
+        docker manifest annotate $repo:$tag $repo:amd64-lts --os linux --arch amd64
+        docker manifest annotate $repo:$tag $repo:armhf-lts --os linux --arch arm --variant v7
+        docker manifest annotate $repo:$tag $repo:aarch64-lts --os linux --arch arm64 --variant v8
+        docker manifest push $repo:$tag
+      }
+    - |
+      for repo in $CI_REGISTRY_IMAGE $DOCKER_REGISTRY_DOCKERHUB_REPO quay.io/$DOCKER_REGISTRY_QUAY_REPO ghcr.io/$DOCKER_REGISTRY_GHCR_REPO; do
+        create_and_push_manifest $repo lts
+      done
