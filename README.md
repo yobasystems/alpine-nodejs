@@ -4,14 +4,14 @@
 [![Docker Pulls](https://img.shields.io/docker/pulls/yobasystems/alpine-nodejs.svg?style=for-the-badge&logo=docker)](https://hub.docker.com/r/yobasystems/alpine-nodejs/)
 [![Docker Stars](https://img.shields.io/docker/stars/yobasystems/alpine-nodejs.svg?style=for-the-badge&logo=docker)](https://hub.docker.com/r/yobasystems/alpine-nodejs/)
 
-[![Alpine Version](https://img.shields.io/badge/Alpine%20version-v3.21.1-green.svg?style=for-the-badge)](https://alpinelinux.org/)
+[![Alpine Version](https://img.shields.io/badge/Alpine%20version-v3.21.2-green.svg?style=for-the-badge)](https://alpinelinux.org/)
 [![nodejs Version](https://img.shields.io/badge/nodejs%20LTS%20version-v22.13.0-green.svg?style=for-the-badge)](https://nodejs.org/)
 [![NPM Version](https://img.shields.io/badge/NPM%20version-v10.9.2-green.svg?style=for-the-badge)](https://npm.org)
 
 
 This container image [(yobasystems/alpine-nodejs)](https://hub.docker.com/r/yobasystems/alpine-nodejs/) is based on the minimal [Alpine Linux](https://alpinelinux.org/) with [Node.js LTS](https://nodejs.org/).
 
-### Alpine Version 3.21.1 (Released 2025-01-06)
+### Alpine Version 3.21.2 (Released 2025-01-06)
 
 ---
 ##### LTS
