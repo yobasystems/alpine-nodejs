@@ -446,12 +446,16 @@ manifest creation lts:
         repo=$1
         tag=$2
         docker manifest create $repo:$tag \
-          $repo:amd64-lts \
-          $repo:armhf-lts \
-          $repo:aarch64-lts
-        docker manifest annotate $repo:$tag $repo:amd64-lts --os linux --arch amd64
-        docker manifest annotate $repo:$tag $repo:armhf-lts --os linux --arch arm --variant v7
-        docker manifest annotate $repo:$tag $repo:aarch64-lts --os linux --arch arm64 --variant v8
+          $repo:amd64 \
+          $repo:armhf \
+          $repo:aarch64
+        
+        # Add annotations
+        docker manifest annotate $repo:$tag $repo:amd64 --os linux --arch amd64
+        docker manifest annotate $repo:$tag $repo:armhf --os linux --arch arm --variant v7
+        docker manifest annotate $repo:$tag $repo:aarch64 --os linux --arch arm64 --variant v8
+        
+        # Push manifest
         docker manifest push $repo:$tag
       }
     - |
