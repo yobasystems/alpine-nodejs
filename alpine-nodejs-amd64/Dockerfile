@@ -1,25 +1,25 @@
-FROM yobasystems/alpine:3.22.0-amd64
+FROM yobasystems/alpine:3.22.1-amd64
 
 ARG BUILD_DATE
 ARG VCS_REF
 
 LABEL maintainer="Dominic Taylor <dominic@yoba.systems>" \
     architecture="amd64/x86_64" \
-    nodejs-version="22.16.0" \
-    alpine-version="3.22.0" \
-    build="21-Jun-2025" \
+    nodejs-version="22.18.0" \
+    alpine-version="3.22.1" \
+    build="03-Aug-2025" \
     org.opencontainers.image.title="alpine-nodejs" \
     org.opencontainers.image.description="Nodejs container image running on Alpine Linux" \
     org.opencontainers.image.authors="Dominic Taylor <dominic@yoba.systems>" \
     org.opencontainers.image.vendor="Yoba Systems" \
-    org.opencontainers.image.version="22.16.0" \
+    org.opencontainers.image.version="22.18.0" \
     org.opencontainers.image.url="https://hub.docker.com/r/yobasystems/alpine-nodejs/" \
     org.opencontainers.image.source="https://github.com/yobasystems/alpine-nodejs" \
-    org.opencontainers.image.base.name="docker.io/yobasystems/alpine:3.22.0" \
+    org.opencontainers.image.base.name="docker.io/yobasystems/alpine:3.22.1" \
     org.opencontainers.image.revision=$VCS_REF \
     org.opencontainers.image.created=$BUILD_DATE
 
-ARG NODE_VER=22.16.0
+ARG NODE_VER=22.18.0
 ARG NPM_VER=10
 
 RUN addgroup -g 1000 node \
