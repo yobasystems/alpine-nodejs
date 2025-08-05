@@ -14,17 +14,17 @@ This container image [(yobasystems/alpine-nodejs)](https://hub.docker.com/r/yoba
 ### Alpine Version 3.22.1 (Released 2025-07-15)
 
 ---
-##### LTS
-###### Node.js Version 22.18.0
-###### NPM Version 10.9.3
+#### LTS
+##### Node.js Version 22.18.0
+##### NPM Version 10.9.3
 ---
-##### CURRENT
-###### Node.js Version 24.5.0
-###### NPM Version 11.5.1
+#### CURRENT
+##### Node.js Version 24.5.0
+##### NPM Version 11.5.1
 ---
-##### MIN
-###### Node.js Version 22.18.0
-###### NPM Version 11.3.0
+#### MIN
+##### Node.js Version 22.18.0
+##### NPM Version 11.3.0
 ----
 
 ## 🏔️ What is Alpine Linux?
