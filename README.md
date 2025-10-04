@@ -65,15 +65,12 @@ Node.js is a platform built on Chrome's JavaScript runtime for easily building f
 ## 📏 Layers & Sizes
 
 ![Version](https://img.shields.io/badge/version-amd64-blue.svg?style=for-the-badge)
-![Docker Image Version (tag)](https://img.shields.io/docker/v/yobasystems/alpine-nodejs/amd64.svg?style=for-the-badge)
 ![Docker Image Size (tag)](https://img.shields.io/docker/image-size/yobasystems/alpine-nodejs/amd64.svg?style=for-the-badge)
 
 ![Version](https://img.shields.io/badge/version-aarch64-blue.svg?style=for-the-badge)
-![Docker Image Version (tag)](https://img.shields.io/docker/v/yobasystems/alpine-nodejs/aarch64.svg?style=for-the-badge)
 ![Docker Image Size (tag)](https://img.shields.io/docker/image-size/yobasystems/alpine-nodejs/aarch64.svg?style=for-the-badge)
 
 ![Version](https://img.shields.io/badge/version-armhf-blue.svg?style=for-the-badge)
-![Docker Image Version (tag)](https://img.shields.io/docker/v/yobasystems/alpine-nodejs/armhf.svg?style=for-the-badge)
 ![Docker Image Size (tag)](https://img.shields.io/docker/image-size/yobasystems/alpine-nodejs/armhf.svg?style=for-the-badge)
 
 
@@ -102,7 +99,6 @@ docker run yobasystems/alpine-nodejs:current
 
 * [Github - yobasystems/alpine-nodejs](https://github.com/yobasystems/alpine-nodejs)
 * [Gitlab - yobasystems/alpine-nodejs](https://gitlab.com/yobasystems/alpine-nodejs)
-* [Bitbucket - yobasystems/alpine-nodejs](https://bitbucket.org/yobasystems/alpine-nodejs/)
 
 
 ## 🐳 Container Registries
