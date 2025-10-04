@@ -7,7 +7,7 @@ LABEL maintainer="Dominic Taylor <dominic@yoba.systems>" \
     architecture="arm32v7/armhf" \
     nodejs-version="current" \
     alpine-version="3.22.1" \
-    build="03-Aug-2025" \
+    build="04-Oct-2025" \
     org.opencontainers.image.title="alpine-nodejs" \
     org.opencontainers.image.description="Nodejs container image running on Alpine Linux" \
     org.opencontainers.image.authors="Dominic Taylor <dominic@yoba.systems>" \
@@ -19,7 +19,7 @@ LABEL maintainer="Dominic Taylor <dominic@yoba.systems>" \
     org.opencontainers.image.revision=$VCS_REF \
     org.opencontainers.image.created=$BUILD_DATE
 
-ARG NODE_VER=24.5.0
+ARG NODE_VER=24.9.0
 ARG NPM_VER=11
 
 RUN addgroup -g 1000 node \
