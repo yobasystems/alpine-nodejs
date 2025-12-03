@@ -6,15 +6,15 @@
 # Note that environment variables can be set in several places
 # See https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
 stages:
-- build
-- test
-- deploy
-- manifest
+  - build
+  - test
+  - deploy
+  - manifest
 
 include:
-- remote: https://gitlab.com/yobasystems/gitlab-ci-templates/raw/master/container_scanning_all_arch.yml
-- template: Security/Secret-Detection.gitlab-ci.yml
-- template: Security/SAST.gitlab-ci.yml
+  - remote: https://gitlab.com/yobasystems/gitlab-ci-templates/raw/master/container_scanning_all_arch.yml
+  - template: Jobs/Secret-Detection.gitlab-ci.yml
+  - template: Jobs/SAST.gitlab-ci.yml
 
 .build_template: &build_definition
   image: yobasystems/alpine-docker:dind
@@ -45,7 +45,7 @@ include:
     - docker push ${CI_REGISTRY_IMAGE}/${CI_COMMIT_SHORT_SHA}:${ARCH}${NODE_VERSION:+-$NODE_VERSION}
 
 # Latest build jobs
-amd64 nodejs build:
+amd64_nodejs_build:
   <<: *build_definition
   tags:
     - amd64
@@ -53,7 +53,7 @@ amd64 nodejs build:
     ARCH: amd64
     PLATFORM: amd64
 
-arm32v7 nodejs build:
+arm32v7_nodejs_build:
   <<: *build_definition
   tags:
     - armhf
@@ -61,7 +61,7 @@ arm32v7 nodejs build:
     ARCH: armhf
     PLATFORM: arm/v7
 
-arm64v8 nodejs build:
+arm64v8_nodejs_build:
   <<: *build_definition
   tags:
     - aarch64
@@ -70,7 +70,7 @@ arm64v8 nodejs build:
     PLATFORM: arm64/v8
 
 # Current build jobs
-amd64 nodejs build current:
+amd64_nodejs_build_current:
   <<: *build_definition
   tags:
     - amd64
@@ -79,7 +79,7 @@ amd64 nodejs build current:
     PLATFORM: amd64
     NODE_VERSION: current
 
-arm32v7 nodejs build current:
+arm32v7_nodejs_build_current:
   <<: *build_definition
   tags:
     - armhf
@@ -88,7 +88,7 @@ arm32v7 nodejs build current:
     PLATFORM: arm/v7
     NODE_VERSION: current
 
-arm64v8 nodejs build current:
+arm64v8_nodejs_build_current:
   <<: *build_definition
   tags:
     - aarch64
@@ -98,7 +98,7 @@ arm64v8 nodejs build current:
     NODE_VERSION: current
 
 # Min build jobs
-amd64 nodejs build min:
+amd64_nodejs_build_min:
   <<: *build_definition
   tags:
     - amd64
@@ -107,7 +107,7 @@ amd64 nodejs build min:
     PLATFORM: amd64
     NODE_VERSION: min
 
-arm32v7 nodejs build min:
+arm32v7_nodejs_build_min:
   <<: *build_definition
   tags:
     - armhf
@@ -116,7 +116,7 @@ arm32v7 nodejs build min:
     PLATFORM: arm/v7
     NODE_VERSION: min
 
-arm64v8 nodejs build min:
+arm64v8_nodejs_build_min:
   <<: *build_definition
   tags:
     - aarch64
@@ -126,7 +126,7 @@ arm64v8 nodejs build min:
     NODE_VERSION: min
 
 # LTS build jobs
-amd64 nodejs build lts:
+amd64_nodejs_build_lts:
   <<: *build_definition
   tags:
     - amd64
@@ -135,7 +135,7 @@ amd64 nodejs build lts:
     PLATFORM: amd64
     NODE_VERSION: lts
 
-arm32v7 nodejs build lts:
+arm32v7_nodejs_build_lts:
   <<: *build_definition
   tags:
     - armhf
@@ -144,7 +144,7 @@ arm32v7 nodejs build lts:
     PLATFORM: arm/v7
     NODE_VERSION: lts
 
-arm64v8 nodejs build lts:
+arm64v8_nodejs_build_lts:
   <<: *build_definition
   tags:
     - aarch64
@@ -153,8 +153,35 @@ arm64v8 nodejs build lts:
     PLATFORM: arm64/v8
     NODE_VERSION: lts
 
-sast:
-  stage: test
+container_scanning_amd64:
+  tags:
+    - amd64
+  variables:
+    CS_DOCKERFILE_PATH: "alpine-nodejs-amd64/Dockerfile"
+
+container_scanning_armhf:
+  tags:
+    - aarch64 # Use aarch64 runner as there isnt an image for armhf
+  variables:
+    CS_DOCKERFILE_PATH: "alpine-nodejs-armhf/Dockerfile"
+
+container_scanning_aarch64:
+  tags:
+    - aarch64
+  variables:
+    CS_DOCKERFILE_PATH: "alpine-nodejs-aarch64/Dockerfile"
+
+sbom_amd64:
+  tags:
+    - amd64
+
+sbom_armhf:
+  tags:
+    - armhf
+
+sbom_aarch64:
+  tags:
+    - aarch64
 
 .deploy_template: &deploy_definition
   image: yobasystems/alpine-docker:dind
@@ -209,7 +236,7 @@ sast:
       fi
 
 # Latest deploy jobs
-amd64 nodejs deploy:
+amd64_nodejs_deploy:
   <<: *deploy_definition
   tags:
     - amd64
@@ -218,9 +245,10 @@ amd64 nodejs deploy:
     ARCH2: x86_64
     PLATFORM: amd64
   needs:
-    - amd64 nodejs build
+    - amd64_nodejs_build
+    - container_scanning_amd64
 
-arm32v7 nodejs deploy:
+arm32v7_nodejs_deploy:
   <<: *deploy_definition
   tags:
     - armhf
@@ -229,9 +257,11 @@ arm32v7 nodejs deploy:
     ARCH2: arm32v7
     PLATFORM: arm/v7
   needs:
-    - arm32v7 nodejs build
+    - arm32v7_nodejs_build
+    - container_scanning_armhf
+    - sbom_armhf
 
-arm64v8 nodejs deploy:
+arm64v8_nodejs_deploy:
   <<: *deploy_definition
   tags:
     - aarch64
@@ -240,10 +270,12 @@ arm64v8 nodejs deploy:
     ARCH2: arm64v8
     PLATFORM: arm64/v8
   needs:
-    - arm64v8 nodejs build
+    - arm64v8_nodejs_build
+    - container_scanning_aarch64
+    - sbom_aarch64
 
 # Current deploy jobs
-amd64 nodejs deploy current:
+amd64_nodejs_deploy_current:
   <<: *deploy_definition
   tags:
     - amd64
@@ -253,9 +285,11 @@ amd64 nodejs deploy current:
     PLATFORM: amd64
     NODE_VERSION: current
   needs:
-    - amd64 nodejs build current
+    - amd64_nodejs_build_current
+    - container_scanning_amd64
+    - sbom_amd64
 
-arm32v7 nodejs deploy current:
+arm32v7_nodejs_deploy_current:
   <<: *deploy_definition
   tags:
     - armhf
@@ -265,9 +299,11 @@ arm32v7 nodejs deploy current:
     PLATFORM: arm/v7
     NODE_VERSION: current
   needs:
-    - arm32v7 nodejs build current
+    - arm32v7_nodejs_build_current
+    - container_scanning_armhf
+    - sbom_armhf
 
-arm64v8 nodejs deploy current:
+arm64v8_nodejs_deploy_current:
   <<: *deploy_definition
   tags:
     - aarch64
@@ -277,10 +313,12 @@ arm64v8 nodejs deploy current:
     PLATFORM: arm64/v8
     NODE_VERSION: current
   needs:
-    - arm64v8 nodejs build current
+    - arm64v8_nodejs_build_current
+    - container_scanning_aarch64
+    - sbom_aarch64
 
 # Min deploy jobs
-amd64 nodejs deploy min:
+amd64_nodejs_deploy_min:
   <<: *deploy_definition
   tags:
     - amd64
@@ -290,9 +328,11 @@ amd64 nodejs deploy min:
     PLATFORM: amd64
     NODE_VERSION: min
   needs:
-    - amd64 nodejs build min
+    - amd64_nodejs_build_min
+    - container_scanning_amd64
+    - sbom_amd64
 
-arm32v7 nodejs deploy min:
+arm32v7_nodejs_deploy_min:
   <<: *deploy_definition
   tags:
     - armhf
@@ -302,9 +342,11 @@ arm32v7 nodejs deploy min:
     PLATFORM: arm/v7
     NODE_VERSION: min
   needs:
-    - arm32v7 nodejs build min
+    - arm32v7_nodejs_build_min
+    - container_scanning_armhf
+    - sbom_armhf
 
-arm64v8 nodejs deploy min:
+arm64v8_nodejs_deploy_min:
   <<: *deploy_definition
   tags:
     - aarch64
@@ -314,10 +356,12 @@ arm64v8 nodejs deploy min:
     PLATFORM: arm64/v8
     NODE_VERSION: min
   needs:
-    - arm64v8 nodejs build min
+    - arm64v8_nodejs_build_min
+    - container_scanning_aarch64
+    - sbom_aarch64
 
 # LTS deploy jobs
-amd64 nodejs deploy lts:
+amd64_nodejs_deploy_lts:
   <<: *deploy_definition
   tags:
     - amd64
@@ -327,9 +371,11 @@ amd64 nodejs deploy lts:
     PLATFORM: amd64
     NODE_VERSION: lts
   needs:
-    - amd64 nodejs build lts
+    - amd64_nodejs_build_lts
+    - container_scanning_amd64
+    - sbom_amd64
 
-arm32v7 nodejs deploy lts:
+arm32v7_nodejs_deploy_lts:
   <<: *deploy_definition
   tags:
     - armhf
@@ -339,9 +385,11 @@ arm32v7 nodejs deploy lts:
     PLATFORM: arm/v7
     NODE_VERSION: lts
   needs:
-    - arm32v7 nodejs build lts
+    - arm32v7_nodejs_build_lts
+    - container_scanning_armhf
+    - sbom_armhf
 
-arm64v8 nodejs deploy lts:
+arm64v8_nodejs_deploy_lts:
   <<: *deploy_definition
   tags:
     - aarch64
@@ -351,16 +399,18 @@ arm64v8 nodejs deploy lts:
     PLATFORM: arm64/v8
     NODE_VERSION: lts
   needs:
-    - arm64v8 nodejs build lts
+    - arm64v8_nodejs_build_lts
+    - container_scanning_aarch64
+    - sbom_aarch64
 
 # Manifest jobs for current, min, and lts
-manifest creation current:
+manifest_creation_current:
   image: yobasystems/alpine-docker:dind
   stage: manifest
   needs:
-    - amd64 nodejs deploy current
-    - arm32v7 nodejs deploy current
-    - arm64v8 nodejs deploy current
+    - amd64_nodejs_deploy_current
+    - arm32v7_nodejs_deploy_current
+    - arm64v8_nodejs_deploy_current
   rules:
     - if: $CI_COMMIT_TAG
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
@@ -389,13 +439,13 @@ manifest creation current:
         create_and_push_manifest $repo current
       done
 
-manifest creation min:
+manifest_creation_min:
   image: yobasystems/alpine-docker:dind
   stage: manifest
   needs:
-    - amd64 nodejs deploy min
-    - arm32v7 nodejs deploy min
-    - arm64v8 nodejs deploy min
+    - amd64_nodejs_deploy_min
+    - arm32v7_nodejs_deploy_min
+    - arm64v8_nodejs_deploy_min
   rules:
     - if: $CI_COMMIT_TAG
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
@@ -424,13 +474,13 @@ manifest creation min:
         create_and_push_manifest $repo min
       done
 
-manifest creation lts:
+manifest_creation_lts:
   image: yobasystems/alpine-docker:dind
   stage: manifest
   needs:
-    - amd64 nodejs deploy lts
-    - arm32v7 nodejs deploy lts
-    - arm64v8 nodejs deploy lts
+    - amd64_nodejs_deploy_lts
+    - arm32v7_nodejs_deploy_lts
+    - arm64v8_nodejs_deploy_lts
   rules:
     - if: $CI_COMMIT_TAG
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
