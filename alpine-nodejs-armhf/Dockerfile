@@ -26,7 +26,7 @@ RUN addgroup -g 1000 node \
  && adduser -u 1000 -G node -s /bin/sh -D node \
  && apk -U add bash curl git make gcc g++ gnupg python3 linux-headers paxctl libgcc libstdc++ binutils-gold ca-certificates ccache xz \
  && cd /tmp \
- && curl --silent --ssl https://nodejs.org/dist/v$NODE_VER/node-v$NODE_VER.tar.gz | tar zxf - \
+ && curl --silent https://nodejs.org/dist/v$NODE_VER/node-v$NODE_VER.tar.gz | tar zxf - \
  && cd node-v$NODE_VER \
  && ./configure --prefix=/usr \
  && make -j4 && make install \
