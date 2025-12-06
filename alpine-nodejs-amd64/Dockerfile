@@ -1,4 +1,4 @@
-FROM yobasystems/alpine:3.22.2-amd64
+FROM yobasystems/alpine:3.23.0-amd64
 
 ARG BUILD_DATE
 ARG VCS_REF
@@ -6,8 +6,8 @@ ARG VCS_REF
 LABEL maintainer="Dominic Taylor <dominic@yoba.systems>" \
     architecture="amd64/x86_64" \
     nodejs-version="22.21.1" \
-    alpine-version="3.22.2" \
-    build="30-Nov-2025" \
+    alpine-version="3.23.0" \
+    build="04-Dec-2025" \
     org.opencontainers.image.title="alpine-nodejs" \
     org.opencontainers.image.description="Nodejs container image running on Alpine Linux" \
     org.opencontainers.image.authors="Dominic Taylor <dominic@yoba.systems>" \
@@ -15,7 +15,7 @@ LABEL maintainer="Dominic Taylor <dominic@yoba.systems>" \
     org.opencontainers.image.version="22.21.1" \
     org.opencontainers.image.url="https://hub.docker.com/r/yobasystems/alpine-nodejs/" \
     org.opencontainers.image.source="https://github.com/yobasystems/alpine-nodejs" \
-    org.opencontainers.image.base.name="docker.io/yobasystems/alpine:3.22.1" \
+    org.opencontainers.image.base.name="docker.io/yobasystems/alpine:3.23.0" \
     org.opencontainers.image.revision=$VCS_REF \
     org.opencontainers.image.created=$BUILD_DATE
 
@@ -24,12 +24,12 @@ ARG NPM_VER=10
 
 RUN addgroup -g 1000 node \
  && adduser -u 1000 -G node -s /bin/sh -D node \
- && apk -U add bash curl git make gcc g++ gnupg python3 linux-headers paxctl libgcc libstdc++ binutils-gold ca-certificates ccache xz \
+ && apk -U add bash curl git make gcc g++ gnupg python3 py-setuptools linux-headers paxctl libgcc libstdc++ binutils-gold ca-certificates ccache xz \
  && cd /tmp \
  && curl --silent https://nodejs.org/dist/v$NODE_VER/node-v$NODE_VER.tar.gz | tar zxf - \
  && cd node-v$NODE_VER \
  && ./configure --prefix=/usr \
- && make -j4 && make install \
+ && make -j$(getconf _NPROCESSORS_ONLN) V= && make install \
  && paxctl -cm /usr/bin/node \
  && npm install -g npm@$NPM_VER \
  && find /usr/lib/node_modules/npm -name test -o -name .bin -type d \
@@ -43,6 +43,7 @@ RUN addgroup -g 1000 node \
     g++ \
     gnupg \
     python3 \
+    py-setuptools \
     linux-headers \
     paxctl \
     grep \
